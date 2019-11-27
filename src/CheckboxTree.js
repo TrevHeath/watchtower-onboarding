@@ -5,7 +5,7 @@ import { Input, Label } from "@rebass/forms";
 import "./checkbox-styles.css";
 
 const slackUrl =
-  "https://hooks.slack.com/services/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";
+  "https://hooks.slack.com/services/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";
 
 export const Widget = ({ options }) => {
   const [nodes, setNodes] = useState(options);
