@@ -36,7 +36,8 @@ export const Widget = ({ options }) => {
       })
     })
       .then(r => {
-        if (r.message === "success") {
+        console.log(r);
+        if (r.ok === true) {
           alert("Stat categories sent successfully");
         }
       })
@@ -63,7 +64,8 @@ export const Widget = ({ options }) => {
           nodes={nodes}
           checked={checked}
           expanded={expanded}
-          optimisticToggle={true}
+          optimisticToggle={false}
+          noCascade={true}
           onCheck={checked => {
             return setChecked(checked);
           }}

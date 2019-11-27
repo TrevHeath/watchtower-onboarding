@@ -45,7 +45,7 @@ const options = [
       "Other",
       "None"
     ],
-    subSubCategories: ["Swimmer", "Apparatus", "Other", "None"]
+    subSubCategories: ["Swimmer", "Apparatus", "Other"]
   },
   {
     category: "Preventative Action",
@@ -58,7 +58,7 @@ const options = [
       "Other",
       "None"
     ],
-    subSubCategories: ["Swimmer", "Apparatus", "Other", "None"]
+    subSubCategories: ["Swimmer", "Apparatus", "Other"]
   },
   {
     category: "Minor Medical Aid",
@@ -73,7 +73,7 @@ const options = [
       "Other",
       "None"
     ],
-    subSubCategories: ["Skating", "Surfing", "Biking", "Other", "None"]
+    subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
   },
   {
     category: "Major Medical Aid",
@@ -88,7 +88,7 @@ const options = [
       "Other",
       "None"
     ],
-    subSubCategories: ["Skating", "Surfing", "Biking", "Other", "None"]
+    subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
   },
   {
     category: "Enforcement",
@@ -119,12 +119,12 @@ const options = [
   {
     category: "Wildlife",
     subCategories: ["Bird", "Mammal", "Shark"],
-    subSubCategories: ["Live", "Dead", "Injured", "None"]
+    subSubCategories: ["Live", "Dead", "Injured"]
   },
   {
     category: "Boat",
-    subCategories: ["Warning", "Tow", "Assist", "Rescue", "None"],
-    subSubCategories: ["Bicycle", "Apparatus", "None"]
+    subCategories: ["Warning", "Tow", "Assist", "Rescue"],
+    subSubCategories: ["Bicycle", "Apparatus"]
   },
   {
     category: "Attendance",
