@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CheckboxTree from "react-checkbox-tree";
 import { Box, Button } from "rebass";
 import { Input, Label } from "@rebass/forms";
-import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import "./checkbox-styles.css";
 
 const slackUrl =
   "https://hooks.slack.com/services/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";
@@ -33,9 +33,7 @@ export const Widget = ({ options }) => {
         Accept: "application/json"
       },
       body: JSON.stringify({
-        text: ` ${
-          inputs.agency
-        } has submitted their stat form:, \`\`\` ${cleanChecked}\`\`\` `
+        text: ` ${inputs.agency} has submitted their stat form:, \`\`\` ${cleanChecked}\`\`\` `
       })
     })
       .then(r => {
