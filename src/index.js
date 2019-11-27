@@ -8,6 +8,8 @@ import { Input, Label } from "@rebass/forms";
 import { ThemeProvider } from "emotion-theming";
 import theme from "./theme";
 
+require("dotenv").config();
+
 const mapToOptionTree = options => {
   return options.map((i, k) => ({
     label: i.category,

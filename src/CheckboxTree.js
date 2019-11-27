@@ -4,8 +4,9 @@ import { Box, Button } from "rebass";
 import { Input, Label } from "@rebass/forms";
 import "./checkbox-styles.css";
 
-const slackUrl =
-  "https://hooks.slack.com/services/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";
+const slackUrl = process.env.REACT_APP_SLACK_URL;
+
+console.log(process.env);
 
 export const Widget = ({ options }) => {
   const [nodes, setNodes] = useState(options);
