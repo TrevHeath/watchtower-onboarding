@@ -42,8 +42,7 @@ const options = [
       "Pier",
       "Rocks & Jetty",
       "Inshore Holes",
-      "Other",
-      "None"
+      "Other"
     ],
     subSubCategories: ["Swimmer", "Apparatus", "Other"]
   },
@@ -55,8 +54,7 @@ const options = [
       "Pier",
       "Rocks & Jetty",
       "Inshore Holes",
-      "Other",
-      "None"
+      "Other"
     ],
     subSubCategories: ["Swimmer", "Apparatus", "Other"]
   },
@@ -70,8 +68,7 @@ const options = [
       "Head Neck Back Injury",
       "Stingray",
       "JellyFish",
-      "Other",
-      "None"
+      "Other"
     ],
     subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
   },
@@ -85,8 +82,7 @@ const options = [
       "Head Neck Back Injury",
       "Stingray",
       "JellyFish",
-      "Other",
-      "None"
+      "Other"
     ],
     subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
   },
@@ -99,8 +95,7 @@ const options = [
       "Fighting",
       "Smoking",
       "Unsafe Beach Activity",
-      "Other",
-      "None"
+      "Other"
     ]
   },
   {
@@ -182,7 +177,7 @@ function App() {
         <Box
           sx={{
             px: 4,
-            py: 5,
+            py: "10rem",
             backgroundImage:
               "url(https://images.unsplash.com/photo-1444762908691-c8461d64d5f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3300&q=80)",
             backgroundSize: "cover",
@@ -213,8 +208,16 @@ function App() {
             }}
           />
         </Box>
-
-        <Flex py={4} sx={{ maxWidth: "1200px", margin: "auto" }}>
+        <Box m={2} p={5} textAlign="center" bg={"lightgray"}>
+          Please fill out the below form to get your Watchtower configured to
+          your beach. If you have questions, please reach out to your Watchtower
+          rep.
+        </Box>
+        <Flex
+          flexWrap="wrap"
+          py={4}
+          sx={{ maxWidth: "1200px", margin: "auto" }}
+        >
           <Box width={[1, 1 / 2]} p={3} borderBottom="1px solid lightgray">
             <Heading pb={1}>Select your categories</Heading>
             <Text fontSize={13} pb={3}>
