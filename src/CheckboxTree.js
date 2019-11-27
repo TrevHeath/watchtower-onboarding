@@ -6,8 +6,6 @@ import "./checkbox-styles.css";
 
 const slackUrl = process.env.REACT_APP_SLACK_URL;
 
-console.log(process.env);
-
 export const Widget = ({ options }) => {
   const [nodes, setNodes] = useState(options);
   const [inputs, setInputs] = useState({});
