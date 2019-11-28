@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import "./styles.css";
 import { Widget } from "./CheckboxTree";
 import { Button, Box, Flex, Heading, Text } from "rebass";
-import { Input, Label } from "@rebass/forms";
+import { Input, Label, Select } from "@rebass/forms";
 import { ThemeProvider } from "emotion-theming";
 import theme from "./theme";
 
@@ -32,6 +32,19 @@ const mapToOptionTree = options => {
       })
   }));
 };
+
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map(function(word) {
+      console.log("First capital letter: " + word[0]);
+      console.log("remain letters: " + word.substr(1));
+      return word[0].toUpperCase() + word.substr(1);
+    })
+    .join(" ")
+    .trim();
+}
 
 const options = [
   {
@@ -129,7 +142,7 @@ const options = [
 
 function App() {
   const [values, setValues] = useState(options);
-  const [inputValues, setInputValues] = useState({});
+  const [inputValues, setInputValues] = useState({ categorySelect: "All" });
 
   const onInputChange = e => {
     setInputValues({ ...inputValues, [e.target.name]: e.target.value });
@@ -137,21 +150,34 @@ function App() {
 
   const onAdd = (value, name) => {
     try {
+      const normalizedValue = normalizeString(value);
       setValues(prevVals => {
         let newVals;
         if (name === "category") {
           newVals = [
             ...prevVals,
             {
-              [name]: value
+              [name]: normalizedValue
             }
           ];
         } else {
           prevVals.forEach((c, i) => {
-            if (!prevVals[i][name]) {
-              prevVals[i][name] = [value];
+            console.log(inputValues);
+            if (inputValues.categorySelect === "All") {
+              console.log("in", inputValues.categorySelect === "All");
+              if (!prevVals[i][name]) {
+                prevVals[i][name] = [normalizedValue];
+              } else {
+                prevVals[i][name].push(normalizedValue);
+              }
             } else {
-              prevVals[i][name].push(value);
+              if (inputValues.categorySelect === c.category) {
+                if (!prevVals[i][name]) {
+                  prevVals[i][name] = [normalizedValue];
+                } else {
+                  prevVals[i][name].push(normalizedValue);
+                }
+              }
             }
           });
 
@@ -232,7 +258,7 @@ function App() {
             </Text>
             <Flex py={2} flexDirection="column">
               <Box pb={2}>
-                <Label>Custom Category</Label>
+                <Label>Add Custom Category</Label>
                 <Input
                   value={inputValues.category || ""}
                   name="category"
@@ -246,8 +272,26 @@ function App() {
               </Box>
             </Flex>
             <Flex py={2} flexDirection="column">
+              <Box pb={3} pt={2}>
+                <Label>Add to:</Label>
+                <Select
+                  value={(inputValues && inputValues.categorySelect) || "All"}
+                  name="categorySelect"
+                  onChange={onInputChange}
+                  defaultValue="All"
+                >
+                  <option value={"All"}>{"All"}</option>
+                  {values.map((v, i) => {
+                    return (
+                      <option key={i} value={v.category}>
+                        {v.category}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </Box>
               <Box pb={2}>
-                <Label>Custom SubCategory</Label>
+                <Label>Add Custom SubCategory</Label>
                 <Input
                   value={inputValues.subCategories || ""}
                   name="subCategories"
@@ -266,7 +310,7 @@ function App() {
             </Flex>
             <Flex py={2} flexDirection="column">
               <Box pb={2}>
-                <Label>Custom SubSubCategory</Label>
+                <Label>Add Custom SubSubCategory</Label>
                 <Input
                   value={inputValues.subSubCategories || ""}
                   name="subSubCategories"
