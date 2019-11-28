@@ -162,9 +162,7 @@ function App() {
           ];
         } else {
           prevVals.forEach((c, i) => {
-            console.log(inputValues);
             if (inputValues.categorySelect === "All") {
-              console.log("in", inputValues.categorySelect === "All");
               if (!prevVals[i][name]) {
                 prevVals[i][name] = [normalizedValue];
               } else {
