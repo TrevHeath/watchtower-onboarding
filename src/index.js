@@ -216,6 +216,7 @@ function App() {
             sx={{ position: "relative", zIndex: "2" }}
             textAlign="center"
             fontSize={[5, 6]}
+            as="h4"
           >
             Watchtower Stat Application
           </Heading>
@@ -243,18 +244,18 @@ function App() {
           sx={{ maxWidth: "1200px", margin: "auto" }}
         >
           <Box width={[1, 1 / 2]} p={3} borderBottom="1px solid lightgray">
-            <Heading pb={1}>Select your categories</Heading>
+            <Heading pb={1}>Select Your Stat Categories</Heading>
             <Text fontSize={13} pb={3}>
               Check the categories you would like to capture
             </Text>
             <Widget options={mappedOptions} />
           </Box>
           <Flex flexDirection="column" p={3} width={[1, 1 / 2]}>
-            <Heading pb={1}>Add custom categories</Heading>
+            <Heading pb={1}>Custom Categories</Heading>
             <Text fontSize={13} pb={3}>
               Custom categories will show in your checkbox tree
             </Text>
-            <Flex py={2} flexDirection="column">
+            <Flex py={3} flexDirection="column">
               <Box pb={2}>
                 <Label>Add Custom Category</Label>
                 <Input
@@ -262,15 +263,24 @@ function App() {
                   name="category"
                   onChange={onInputChange}
                 />
-              </Box>
-              <Box>
-                <Button onClick={() => onAdd(inputValues.category, "category")}>
-                  Add
-                </Button>
+                <Box py={2}>
+                  <Button
+                    onClick={() => onAdd(inputValues.category, "category")}
+                  >
+                    Add
+                  </Button>
+                </Box>
               </Box>
             </Flex>
-            <Flex py={2} flexDirection="column">
-              <Box pb={3} pt={2}>
+            <Flex py={3} flexDirection="column">
+              <Heading as="h4" pb={1}>
+                Custom SubCategories
+              </Heading>
+              <Text fontSize={13} pb={3}>
+                Select the category you would like your sub and sub sub
+                categories to be added to.
+              </Text>
+              <Box py={2}>
                 <Label>Add to:</Label>
                 <Select
                   value={(inputValues && inputValues.categorySelect) || "All"}
@@ -288,33 +298,33 @@ function App() {
                   })}
                 </Select>
               </Box>
-              <Box pb={2}>
-                <Label>Add Custom SubCategory</Label>
+              <Box py={3}>
+                <Label>SubCategory</Label>
                 <Input
                   value={inputValues.subCategories || ""}
                   name="subCategories"
                   onChange={onInputChange}
                 />
+                <Box py={2}>
+                  <Button
+                    onClick={() =>
+                      onAdd(inputValues.subCategories, "subCategories")
+                    }
+                  >
+                    Add
+                  </Button>
+                </Box>
               </Box>
-              <Box>
-                <Button
-                  onClick={() =>
-                    onAdd(inputValues.subCategories, "subCategories")
-                  }
-                >
-                  Add
-                </Button>
-              </Box>
-            </Flex>
-            <Flex py={2} flexDirection="column">
+
               <Box pb={2}>
-                <Label>Add Custom SubSubCategory</Label>
+                <Label>SubSubCategory</Label>
                 <Input
                   value={inputValues.subSubCategories || ""}
                   name="subSubCategories"
                   onChange={onInputChange}
                 />
               </Box>
+
               <Box>
                 <Button
                   onClick={() =>
