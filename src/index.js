@@ -25,7 +25,7 @@ const mapToOptionTree = options => {
             i.subSubCategories.map((subSub, kSubSub) => {
               return {
                 label: subSub,
-                value: `${i.category} / ${sub} / ${subSub} - ${kSub}`
+                value: `${i.category} / ${sub} / ${subSub} - ${kSub + kSubSub}`
               };
             })
         };
