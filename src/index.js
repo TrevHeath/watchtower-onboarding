@@ -19,13 +19,13 @@ const mapToOptionTree = options => {
       i.subCategories.map((sub, kSub) => {
         return {
           label: sub,
-          value: `${i.category} / ${sub} - ${Math.random()}`,
+          value: `${i.category} / ${sub} - ${kSub}`,
           children:
             i.subSubCategories &&
             i.subSubCategories.map((subSub, kSubSub) => {
               return {
                 label: subSub,
-                value: `${i.category} / ${sub} / ${subSub} - ${Math.random()}`
+                value: `${i.category} / ${sub} / ${subSub} - ${kSub}`
               };
             })
         };
