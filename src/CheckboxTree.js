@@ -6,6 +6,17 @@ import "./checkbox-styles.css";
 
 const slackUrl = process.env.REACT_APP_SLACK_URL;
 
+function getNodeIds(nodes) {
+  let ids = [];
+
+  nodes &&
+    nodes.forEach(({ value, children }) => {
+      ids = [...ids, value, ...getNodeIds(children)];
+    });
+
+  return ids;
+}
+
 export const Widget = ({ options }) => {
   const [nodes, setNodes] = useState(options);
   const [inputs, setInputs] = useState({});
@@ -15,6 +26,7 @@ export const Widget = ({ options }) => {
 
   React.useEffect(() => {
     setNodes(options);
+    setChecked(getNodeIds(options));
   }, [options]);
 
   const handleSubmit = e => {
