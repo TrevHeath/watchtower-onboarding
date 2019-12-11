@@ -27,6 +27,7 @@ export const Widget = ({ options }) => {
   React.useEffect(() => {
     setNodes(options);
     setChecked(getNodeIds(options));
+    setExpanded(getNodeIds(options));
   }, [options]);
 
   const handleSubmit = e => {
