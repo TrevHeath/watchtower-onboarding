@@ -129,8 +129,7 @@ const options = [
   },
   {
     category: "Boat",
-    subCategories: ["Warning", "Tow", "Assist", "Rescue"],
-    subSubCategories: ["Bicycle", "Apparatus"]
+    subCategories: ["Warning", "Tow", "Assist", "Rescue"]
   },
   {
     category: "Attendance",
