@@ -1,46 +1,29 @@
+import { bootstrap } from "@theme-ui/preset-bootstrap";
+
+import nightOwl from "@theme-ui/prism/presets/night-owl.json";
+
 export default {
-  breakpoints: ["40em", "52em", "64em"],
-  fontSizes: [12, 14, 16, 18, 20, 24, 40, 52],
-  colors: {
-    blue: "#07c",
-    lightgray: "#f6f6ff",
-    primary: "red"
+  ...bootstrap,
+  forms: {
+    label: {
+      fontSize: 1,
+      fontWeight: "bold"
+    }
   },
-  space: [0, 4, 8, 16, 32, 64, 128, 256],
-  fonts: {
-    body: "Open sans, sans-serif",
-    heading: "inherit",
-    monospace: "Menlo, monospace"
-  },
-  fontWeights: {
-    body: 400,
-    heading: 600,
-    bold: 700
-  },
-  lineHeights: {
-    body: 1.5,
-    heading: 1.25
-  },
-  shadows: {
-    small: "0 0 4px rgba(0, 0, 0, .125)",
-    large: "0 0 24px rgba(0, 0, 0, .125)"
-  },
-  variants: {},
-  text: {},
-  label: {
-    marginBottom: "5px"
-  },
-  buttons: {
-    padding: "5px",
-    cursor: "pointer",
+  alerts: {
     primary: {
       color: "white",
       bg: "primary"
+    },
+    error: {
+      bg: "red"
     }
   },
-  input: {
-    border: "1px solid gray",
-    borderRadius: "4px",
-    padding: "5px"
+
+  styles: {
+    ...bootstrap.styles,
+    code: {
+      ...nightOwl
+    }
   }
 };

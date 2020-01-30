@@ -1,21 +1,21 @@
-// const dotenv = require('dotenv')
+const dotenv = require("dotenv");
 
-// // require and configure dotenv, will load vars in .env in PROCESS.ENV
-// if (process.env.NODE_STAGE !== 'production') {
-//   dotenv.config()
-// }
+// require and configure dotenv, will load vars in .env in PROCESS.ENV
+if (process.env.NODE_STAGE !== "production") {
+  dotenv.config();
+}
 
 const config = {
-  staging: { GRAPHQL_URL: process.env.STAGING_GRAPHQL_URL },
+  staging: { GRAPHQL_URL: process.env.REACT_APP_STAGING_GRAPHQL_URL },
   production: {
-    GRAPHQL_URL: process.env.PRODUCTION_GRAPHQL_URL
-  }
+    GRAPHQL_URL: process.env.REACT_APP_PRODUCTION_GRAPHQL_URL
+  },
+  slackUrl: process.env.REACT_APP_SLACK_URL
 };
 
 const flattenedConfig = {
   ...config,
-  ...config[process.env.GATSBY_NODE_STAGE]
+  ...config[process.env.REACT_APP_STAGE]
 };
 
-module.exports.config = flattenedConfig;
-module.exports.getEnvVars = () => flattenedConfig;
+export default flattenedConfig;
