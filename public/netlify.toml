@@ -1,6 +1,6 @@
 [context.production.environment]
   STAGE = "production"
-[context.branch-deploy]
+[context.branch-deploy.environment]
   STAGE = "staging"
 [context.deploy-preview.environment]
   STAGE = "staging"
