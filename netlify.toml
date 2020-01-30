@@ -1,11 +1,11 @@
 [context.production]
-  environment = {  STAGE = "production" }
+  environment = {  STAGE = "production", REACT_APP_PRODUCTION_GRAPHQL_URL= "https://api.yourwatchtower.com/", REACT_APP_SLACK_URL ="https://hooks.slack.com/services/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" }
 
 [context.branch-deploy]
-  environment = {  STAGE = "staging" }
+  environment = {  STAGE = "staging",  REACT_APP_PRODUCTION_GRAPHQL_URL= "https://staging.api.yourwatchtower.com/",  REACT_APP_SLACK_URL ="https://hooks.slack.com/services/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" }
 
 [context.deploy-preview]
-  environment = {  STAGE = "staging" }
+  environment = {  STAGE = "staging", REACT_APP_PRODUCTION_GRAPHQL_URL= "https://staging.api.yourwatchtower.com/", REACT_APP_SLACK_URL ="https://hooks.slack.com/services/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" }
   
 
 
