@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CheckboxTree from "react-checkbox-tree";
-import { Box, Button } from "rebass";
-import { Input, Label } from "@rebass/forms";
+import { Box, Button, Input, Label } from "theme-ui";
+
 import "./checkbox-styles.css";
 
 const slackUrl = process.env.REACT_APP_SLACK_URL;
@@ -17,7 +17,7 @@ function getNodeIds(nodes) {
   return ids;
 }
 
-export const Widget = ({ options }) => {
+export const CustomCheckboxTree = ({ options }) => {
   const [nodes, setNodes] = useState(options);
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState();
