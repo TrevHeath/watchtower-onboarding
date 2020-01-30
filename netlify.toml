@@ -1,9 +1,0 @@
-[context.production.environment]
-    STAGE = "production"
-[context.deploy-preview.environment]
-  STAGE = "staging"
-
-  
-
-
-   
