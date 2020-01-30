@@ -3,10 +3,7 @@
 [context.deploy-preview.environment]
   STAGE = "staging"
 
-
-  [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  
 
 
    
