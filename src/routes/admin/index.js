@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Input, Label, Text, Box, Button, Heading } from "theme-ui";
-import Banner from "../../components/Banner";
+
 import Layout from "../../components/Layout";
 
 const Admin = () => {

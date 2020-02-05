@@ -37,7 +37,7 @@ const INVITE_USER = gql`
 `;
 
 export default function UserManagement() {
-  const [invite, { data, loading, error }] = useMutation(INVITE_USER);
+  const [invite, { loading }] = useMutation(INVITE_USER);
   const { data: agencies, loading: loadingAgencies } = useQuery(GET_AGENCIES);
   const { register, handleSubmit, errors } = useForm();
   const { add } = useToasts();
@@ -52,8 +52,13 @@ export default function UserManagement() {
           agencyId: values.agencyId
         }
       });
-      if (res.data.success || error) {
-        add({ content: "User Invited!" });
+
+      if (
+        res.data &&
+        res.data.sendInviteEmail &&
+        res.data.sendInviteEmail.success
+      ) {
+        add({ content: "User Invited!", variant: "success" });
       }
     } catch (e) {
       add({ content: e.message, variant: "error" });
@@ -103,8 +108,8 @@ export default function UserManagement() {
             <Label>Role</Label>
 
             <Select type="select" name="role" ref={register}>
-              <option value={"ADMIN"}>Admin</option>
               <option value={"USER"}>User</option>
+              <option value={"ADMIN"}>Admin</option>
             </Select>
           </Box>
 

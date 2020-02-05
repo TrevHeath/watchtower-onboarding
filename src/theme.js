@@ -16,7 +16,10 @@ export default {
       bg: "primary"
     },
     error: {
-      bg: "red"
+      bg: "danger"
+    },
+    success: {
+      bg: "success"
     }
   },
 
