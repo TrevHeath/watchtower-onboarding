@@ -18,7 +18,7 @@ const LOGIN = gql`
 
 const Login = () => {
   const [login, { data, loading, error }] = useMutation(LOGIN);
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const onLogin = values => {
     login({
       variables: { email: values.email, password: values.password }
