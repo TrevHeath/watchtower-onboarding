@@ -25,6 +25,19 @@ export default {
 
   styles: {
     ...bootstrap.styles,
+    table: {
+      width: "100%",
+      borderCollapse: "separate",
+      borderSpacing: 0
+    },
+    th: {
+      textAlign: "left",
+      borderBottomStyle: "solid"
+    },
+    td: {
+      textAlign: "left",
+      borderBottomStyle: "solid"
+    },
     code: {
       ...nightOwl
     }

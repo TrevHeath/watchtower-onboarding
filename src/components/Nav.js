@@ -40,6 +40,15 @@ export default () => {
             Users
           </Link>
         </Box>
+        <Box color="white" p={2}>
+          <Link
+            getProps={isActive}
+            style={{ color: "inherit", textDecoration: "none" }}
+            to="/admin/activity"
+          >
+            Activity
+          </Link>
+        </Box>
       </Flex>
       <Box p={2}>
         <NavLink

@@ -14,6 +14,7 @@ import client from "./services/Apollo";
 import { PublicRoute, ProtectedRoute } from "./components/routes";
 import Login from "./routes/admin/Login";
 import UserManagement from "./routes/admin/UserManagement";
+import AgencyActivity from "./routes/admin/Activity";
 import { ToastProvider } from "./components/Toasts";
 import Prism from "@theme-ui/prism";
 
@@ -31,6 +32,7 @@ function App() {
             <PublicRoute component={Onboarding} path="/" />
             <ProtectedRoute path="admin" component={Admin} />
             <ProtectedRoute path="admin/users" component={UserManagement} />
+            <ProtectedRoute path="admin/activity" component={AgencyActivity} />
             <PublicRoute component={Login} path="/admin/login" />
           </Router>
         </ToastProvider>
