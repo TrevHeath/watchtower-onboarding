@@ -22,9 +22,16 @@ export default {
       bg: "success"
     }
   },
+  buttons: {
+    secondary: {
+      color: "white",
+      bg: "secondary"
+    }
+  },
 
   styles: {
     ...bootstrap.styles,
+
     table: {
       width: "100%",
       borderCollapse: "separate",
