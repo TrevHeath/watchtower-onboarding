@@ -17,6 +17,7 @@ import UserManagement from "./routes/admin/UserManagement";
 import AgencyActivity from "./routes/admin/Activity";
 import { ToastProvider } from "./components/Toasts";
 import Prism from "@theme-ui/prism";
+import { ModalProvider } from "react-modal-hook";
 
 const components = {
   pre: ({ children }) => <>{children}</>,
@@ -27,15 +28,20 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme} components={components}>
-        <ToastProvider>
-          <Router>
-            <PublicRoute component={Onboarding} path="/" />
-            <ProtectedRoute path="admin" component={Admin} />
-            <ProtectedRoute path="admin/users" component={UserManagement} />
-            <ProtectedRoute path="admin/activity" component={AgencyActivity} />
-            <PublicRoute component={Login} path="/admin/login" />
-          </Router>
-        </ToastProvider>
+        <ModalProvider>
+          <ToastProvider>
+            <Router>
+              <PublicRoute component={Onboarding} path="/" />
+              <ProtectedRoute path="admin" component={Admin} />
+              <ProtectedRoute path="admin/users" component={UserManagement} />
+              <ProtectedRoute
+                path="admin/activity"
+                component={AgencyActivity}
+              />
+              <PublicRoute component={Login} path="/admin/login" />
+            </Router>
+          </ToastProvider>
+        </ModalProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

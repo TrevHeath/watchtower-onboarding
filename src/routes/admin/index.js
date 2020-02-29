@@ -1,23 +1,176 @@
 import React, { useState } from "react";
-import { Input, Label, Text, Box, Button, Heading } from "theme-ui";
+import {
+  Input,
+  Label,
+  Text,
+  Box,
+  Button,
+  Heading,
+  Checkbox,
+  Styled
+} from "theme-ui";
 
 import Layout from "../../components/Layout";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
+import { useModal } from "react-modal-hook";
+import ReactModal from "react-modal";
+import { useToasts } from "../../components/Toasts";
+import { toTitleCase } from "../../utils";
+
+const ONBOARD_AGENCY = gql`
+  mutation OnboardAgency($data: OnboardAgencyInput!) {
+    onboardAgency(data: $data) {
+      id
+    }
+  }
+`;
+
+const CardFooter = ({ children }) => {
+  return (
+    <Box
+      p={25}
+      sx={{
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        left: 0,
+        height: "auto",
+        textAlign: "right"
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 const Admin = () => {
+  const [onboard, { loading }] = useMutation(ONBOARD_AGENCY);
   const [values, setValues] = useState({});
-  const [gqlArgs, setGQLArgs] = useState({});
+  const [gqlArgs, setGQLArgs] = useState();
+  const { add } = useToasts();
+  const [showModal, hideModal] = useModal(
+    () => (
+      <ReactModal isOpen>
+        <Heading as="h1">
+          Are you sure you would like to create this agency:
+        </Heading>
+
+        {Object.keys(values).length ? (
+          <>
+            {" "}
+            <Box p={45}>
+              <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+                <strong>
+                  Please review this for accuracy. It is difficule to undo a new
+                  agency.
+                </strong>
+              </Box>
+              {values.agencyName && (
+                <div>
+                  <Heading as="h3">Agency:</Heading>
+                  {values.agencyName}
+                </div>
+              )}
+              {values.surflineSpotId && (
+                <div>
+                  <Heading as="h3">SurflineSpotId:</Heading>
+                  {values.surflineSpotId}
+                </div>
+              )}
+              {values.stats && (
+                <div>
+                  <Heading as="h3">Stats:</Heading>
+                  {JSON.stringify(values.stats)}
+                </div>
+              )}
+              {values.users && (
+                <div>
+                  <Heading as="h3">Users:</Heading>
+                  {JSON.stringify(values.users)}
+                </div>
+              )}
+              {values.positions && (
+                <div>
+                  <Heading as="h3">Positions:</Heading>
+                  {JSON.stringify(values.positions)}
+                </div>
+              )}
+              <Box py={20}>
+                <strong>
+                  {" "}
+                  In case you need Trevor to create, share this snippet:
+                </strong>
+              </Box>
+              {!gqlArgs ? (
+                <Button onClick={() => generateSnippet}>
+                  Generate Snippet
+                </Button>
+              ) : (
+                <code>
+                  {JSON.stringify(gqlArgs).replace(/\"([^(\")"]+)\":/g, "$1:")}
+                </code>
+              )}
+            </Box>
+            <CardFooter>
+              <Button
+                sx={{ marginRight: 5 }}
+                onClick={async () => {
+                  try {
+                    const res = await onboard({
+                      variables: {
+                        ...gqlArgs
+                      }
+                    });
+                    console.log(res);
+                    if (
+                      res.data &&
+                      res.data.onboardAgency &&
+                      res.data.onboardAgency.id
+                    ) {
+                      add({ content: "Agency created!", variant: "success" });
+                      hideModal();
+                    }
+                  } catch (e) {
+                    add({ content: e.message, variant: "error" });
+                  }
+                }}
+              >
+                {loading ? "Creating..." : "Create Agency"}
+              </Button>
+              <Button onClick={() => hideModal()} variant="secondary">
+                Not yet
+              </Button>
+            </CardFooter>
+          </>
+        ) : (
+          <Box p={45}>
+            No values...
+            <CardFooter>
+              <Button onClick={() => hideModal()}>Go Back</Button>
+            </CardFooter>
+          </Box>
+        )}
+      </ReactModal>
+    ),
+    [values, gqlArgs, loading, add]
+  );
+
+  function handleCheckBoxChange(e) {
+    setValues({ ...values, [e.target.name]: !values[e.target.name] });
+  }
 
   function handleChange(e, field) {
     let cleanValue;
     if (e.target.name === "stats") {
-      cleanValue = e.target.value.split(",").map(i => i.trim());
+      cleanValue = e.target.value.split(",").map(i => toTitleCase(i.trim()));
     }
     if (e.target.name === "positions") {
       const removeFront = e.target.value.split(",");
 
       cleanValue = removeFront
         ? removeFront.map(i => ({
-            name: i && i.trim(),
+            name: i && toTitleCase(i.trim()),
             dispatchable: false
           }))
         : "";
@@ -32,15 +185,24 @@ const Admin = () => {
 
       cleanValue = removeFront
         ? removeFront.map(i => ({
-            name: i && i.trim()
+            name: i && toTitleCase(i.trim())
           }))
         : "";
     }
 
-    setValues({ ...values, [e.target.name]: cleanValue || e.target.value });
+    setValues({
+      ...values,
+      [e.target.name]: cleanValue || toTitleCase(e.target.value)
+    });
   }
-  function handleSubmit() {
+
+  function generateSnippet() {
     setGQLArgs(formatGqlArgs(values));
+  }
+
+  function handleSubmit() {
+    generateSnippet();
+    showModal();
   }
 
   return (
@@ -61,6 +223,13 @@ const Admin = () => {
         <Box py={25}>
           {" "}
           <Label>Surfline Spot Id</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>
+              You can find this at the end of a surfline spot url. Example:
+            </strong>
+            <br />
+            https://www.surfline.com/surf-report/newport-beach-/5842041f4e65fad6a770882c
+          </Box>
           <Input
             id="surflineSpotId"
             name="surflineSpotId"
@@ -70,6 +239,15 @@ const Admin = () => {
         <Box py={25}>
           {" "}
           <Label>Stats</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>
+              {" "}
+              Should follow this notation with each type being separated by a
+              comma:
+            </strong>{" "}
+            <br />
+            Rescue, Rescue / Surf / Swimmer, Boat, Boat / Tow
+          </Box>
           <Input
             as="textarea"
             name="stats"
@@ -83,6 +261,16 @@ const Admin = () => {
         <Box py={25}>
           {" "}
           <Label>Users</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>
+              {" "}
+              Should follow this notation with each type being separated by a
+              comma or a colon (:) :
+            </strong>{" "}
+            <br />
+            Trevor Heath, David Rodriguez <strong>or</strong> Heath, Trevor:
+            Rodriguez, David
+          </Box>
           <Input
             as="textarea"
             name="users"
@@ -96,6 +284,14 @@ const Admin = () => {
         <Box py={25}>
           {" "}
           <Label>Positions</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>
+              Should follow this notation with each type being separated by a
+              comma:
+            </strong>{" "}
+            <br />
+            Tower 10, 5210, 5220
+          </Box>
           <Input
             as="textarea"
             name="positions"
@@ -106,68 +302,36 @@ const Admin = () => {
           {values.positions && (
             <div>
               <h4>Dispatchable?</h4>
-              {values.positions.map(p => (
-                <div>
-                  <input
-                    checked={values[p.name]}
-                    name={p.name}
-                    type="checkbox"
-                    onChange={handleChange}
-                  />
-                  <label for={p.name}>{p.name}</label>
-                </div>
-              ))}
+              <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+                <strong>
+                  Check the positions that are defaulted as dispatchable, this
+                  can be editted by the user later on.
+                </strong>
+              </Box>
+              {values.positions.map((p, k) => {
+                return (
+                  <Box>
+                    <Label mb={3}>
+                      <Checkbox
+                        defaultChecked={false}
+                        name={p.name}
+                        onClick={handleCheckBoxChange}
+                      />
+                      {p.name}
+                    </Label>
+                  </Box>
+                );
+              })}
             </div>
           )}
         </Box>
-        <div>
-          <Heading py={35} as="h3">
-            Preview:
-          </Heading>
-          {values.agencyName && (
-            <div>
-              <Heading as="h3">Agency:</Heading>
-              {values.agencyName}
-            </div>
-          )}
-          {values.surflineSpotId && (
-            <div>
-              <Heading as="h3">SurflineSpotId:</Heading>
-              {values.surflineSpotId}
-            </div>
-          )}
-          {values.stats && (
-            <div>
-              <Heading as="h3">Stats:</Heading>
-              {JSON.stringify(values.stats)}
-            </div>
-          )}
-        </div>
 
-        {values.users && (
-          <div>
-            <Heading as="h3">Users:</Heading>
-            {JSON.stringify(values.users)}
-          </div>
-        )}
-        {values.positions && (
-          <div>
-            <Heading as="h3">Positions:</Heading>
-            {JSON.stringify(values.positions)}
-          </div>
-        )}
         <Box py={45} sx={{ width: "100%" }}>
           <Button sx={{ width: "100%" }} onClick={handleSubmit}>
             Create agency data
           </Button>
         </Box>
-        <Box p={45}>
-          <Label>Result (send to Trevor):</Label>
 
-          <code>
-            {JSON.stringify(gqlArgs).replace(/\"([^(\")"]+)\":/g, "$1:")}
-          </code>
-        </Box>
         {/* {stats.split(",").map(i => (
         <div>{i}</div>
       ))} */}
