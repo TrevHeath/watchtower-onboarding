@@ -225,7 +225,8 @@ const Admin = () => {
           <Label>Surfline Spot Id</Label>
           <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
             <strong>
-              You can find this at the end of a surfline spot url. Example:
+              You can find this at the end of a surfline spot url. IT SHOULD
+              START WITH A 5 and be around 20+ characters. Example:
             </strong>
             <br />
             https://www.surfline.com/surf-report/newport-beach-/5842041f4e65fad6a770882c
@@ -265,11 +266,20 @@ const Admin = () => {
             <strong>
               {" "}
               Should follow this notation with each type being separated by a
-              comma or a colon (:) :
+              comma or a colon (:). IF THE NAMES HAVE A COMMA, MAKE SURE YOU USE
+              : TO SEPARATE. SEE EXAMPLE BELOW:
             </strong>{" "}
             <br />
-            Trevor Heath, David Rodriguez <strong>or</strong> Heath, Trevor:
-            Rodriguez, David
+            Trevor Heath, David Rodriguez <br />
+            <strong>or</strong>
+            <br /> Heath, Trevor: Rodriguez, David
+            <br />
+            You can use this{" "}
+            <a href="https://convert.town/column-to-comma-separated-list">
+              website
+            </a>{" "}
+            to convert a column to the correct format. The delimiter option
+            allows you to choose a comma or colon.
           </Box>
           <Input
             as="textarea"
