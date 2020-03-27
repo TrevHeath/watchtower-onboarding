@@ -18,6 +18,7 @@ import AgencyActivity from "./routes/admin/Activity";
 import { ToastProvider } from "./components/Toasts";
 import Prism from "@theme-ui/prism";
 import { ModalProvider } from "react-modal-hook";
+import EditAgency from "./routes/admin/EditAgency";
 
 const components = {
   pre: ({ children }) => <>{children}</>,
@@ -34,6 +35,7 @@ function App() {
               <PublicRoute component={Onboarding} path="/" />
               <ProtectedRoute path="admin" component={Admin} />
               <ProtectedRoute path="admin/users" component={UserManagement} />
+              <ProtectedRoute path="admin/edit-agency" component={EditAgency} />
               <ProtectedRoute
                 path="admin/activity"
                 component={AgencyActivity}

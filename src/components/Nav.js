@@ -35,9 +35,18 @@ export default () => {
           <Link
             getProps={isActive}
             style={{ color: "inherit", textDecoration: "none" }}
+            to="/admin/edit-agency"
+          >
+            Edit Agency
+          </Link>
+        </Box>
+        <Box color="white" p={2}>
+          <Link
+            getProps={isActive}
+            style={{ color: "inherit", textDecoration: "none" }}
             to="/admin/users"
           >
-            Users
+            Invite Users
           </Link>
         </Box>
         <Box color="white" p={2}>

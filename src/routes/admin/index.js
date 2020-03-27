@@ -122,7 +122,7 @@ const Admin = () => {
                         ...gqlArgs
                       }
                     });
-                    console.log(res);
+
                     if (
                       res.data &&
                       res.data.onboardAgency &&
