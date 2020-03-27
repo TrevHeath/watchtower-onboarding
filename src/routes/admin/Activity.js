@@ -50,9 +50,8 @@ const GET_AGENCIES = gql`
 
 export default function AgencyActivity() {
   const [dateRange, setDateRange] = useState(0);
-  const [where, setWhere] = useState();
 
-  const { data, refetch, loading: loadingAgencies } = useQuery(GET_AGENCIES, {
+  const { data, loading: loadingAgencies } = useQuery(GET_AGENCIES, {
     variables: {
       submissionWhereInput: {
         createdAt: {

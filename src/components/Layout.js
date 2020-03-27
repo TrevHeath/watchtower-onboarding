@@ -1,11 +1,16 @@
 import React from "react";
-import { Box } from "theme-ui";
+import { Box, Spinner } from "theme-ui";
 import Banner from "./Banner";
 import Nav from "./Nav";
 
-export default function Layout({ withNav, bannerChildren, children }) {
+export default function Layout({ withNav, bannerChildren, children, loading }) {
   return (
-    <Box>
+    <Box sx={{ position: "relative" }}>
+      {loading && (
+        <Box sx={{ position: "fixed", top: 0, right: 0 }}>
+          <Spinner />
+        </Box>
+      )}
       <Banner>{bannerChildren}</Banner>
       {withNav && (
         <Box sx={{ width: "100%" }}>

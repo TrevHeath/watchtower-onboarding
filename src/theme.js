@@ -1,9 +1,9 @@
-import { bootstrap } from "@theme-ui/preset-bootstrap";
+import theme from "@theme-ui/preset-bootstrap";
 
 import nightOwl from "@theme-ui/prism/presets/night-owl.json";
 
 export default {
-  ...bootstrap,
+  ...theme,
   forms: {
     label: {
       fontSize: 1,
@@ -23,28 +23,29 @@ export default {
     }
   },
   buttons: {
-    secondary: {
+    primary: {
       color: "white",
-      bg: "secondary"
+      bg: "primary"
+    },
+    link: {
+      bg: "transparent"
+    },
+    success: {
+      bg: "success"
     }
   },
 
   styles: {
-    ...bootstrap.styles,
-
+    ...theme.styles,
+    padding: "1rem",
     table: {
       width: "100%",
+      my: 4,
+      // borderColor: colors.gray,
       borderCollapse: "separate",
       borderSpacing: 0
     },
-    th: {
-      textAlign: "left",
-      borderBottomStyle: "solid"
-    },
-    td: {
-      textAlign: "left",
-      borderBottomStyle: "solid"
-    },
+
     code: {
       ...nightOwl
     }
