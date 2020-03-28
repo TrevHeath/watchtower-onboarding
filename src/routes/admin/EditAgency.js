@@ -226,7 +226,7 @@ export default function UserManagement() {
           )}
           {data && data.agencies[0].users ? (
             <Box py={25}>
-              <Label>Users </Label>
+              <h2>Users </h2>
               <UserTable
                 data={data.agencies[0].users}
                 resendInvite={onResendInvite}
@@ -303,7 +303,7 @@ const UserTable = ({ data, resendInvite }) => {
         accessor: "role"
       },
       {
-        Header: "User Registered",
+        Header: "Registered",
         accessor: value => {
           return value.isSignedUp === true ? "Yes" : "No";
         }
@@ -347,6 +347,7 @@ const Styled = styled.div`
   table {
     border-spacing: 0;
     border: 1px solid black;
+    border-radius: 4px;
     tr {
       :last-child {
         td {
@@ -354,7 +355,15 @@ const Styled = styled.div`
         }
       }
     }
-    th,
+    th {
+      background-color: ${props => {
+        console.log(props.theme.colors);
+        return props.theme.colors["grayDark"];
+      }};
+      text-align: left;
+      padding: 1rem;
+      color: white;
+    }
     td {
       margin: 0;
       padding: 0.5rem;
