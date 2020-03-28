@@ -1,0 +1,15 @@
+[context.production.environment]
+  REACT_APP_STAGE = "production"
+  REACT_APP_PRODUCTION_GRAPHQL_URL= "https://api.yourwatchtower.com/"
+
+[context.branch-deploy.environment]
+  REACT_APP_STAGE = "staging"
+  REACT_APP_PRODUCTION_GRAPHQL_URL= "https://staging.api.yourwatchtower.com/"
+
+[context.deploy-preview.environment]
+  REACT_APP_STAGE = "staging"
+  REACT_APP_PRODUCTION_GRAPHQL_URL= "https://staging.api.yourwatchtower.com/"
+  
+
+
+   

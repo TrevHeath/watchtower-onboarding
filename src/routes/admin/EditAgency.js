@@ -258,7 +258,7 @@ function Table({ columns, data }) {
     columns,
     data
   });
-  console.log(rows);
+
   return (
     <table {...getTableProps()}>
       <thead>
@@ -276,7 +276,8 @@ function Table({ columns, data }) {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                console.log(cell.value);
+                return <td {...cell.getCellProps()}>{cell.value}</td>;
               })}
             </tr>
           );
