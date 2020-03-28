@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import { Button, Label, Input, Box, Heading, Select, Spinner } from "theme-ui";
 import { useForm } from "react-hook-form";
 import { useTable } from "react-table";
-
+import styled from "@emotion/styled";
 import gql from "graphql-tag";
 
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
@@ -260,8 +260,8 @@ function Table({ columns, data }) {
   });
   console.log(rows);
   return (
-    <Box as="table" {...getTableProps()}>
-      <Box as="thead">
+    <table {...getTableProps()}>
+      <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -269,24 +269,20 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
-      </Box>
-      <Box as="tbody" {...getTableBodyProps()}>
+      </thead>
+      <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <Box as="tr" {...row.getRowProps()}>
+            <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
-                return (
-                  <Box as="td" {...cell.getCellProps()}>
-                    {cell.render("Cell")}
-                  </Box>
-                );
+                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}
-            </Box>
+            </tr>
           );
         })}
-      </Box>
-    </Box>
+      </tbody>
+    </table>
   );
 }
 
@@ -339,5 +335,34 @@ const UserTable = ({ data, resendInvite }) => {
   );
 
   const tableData = React.useMemo(() => data, []);
-  return <Table columns={columns} data={tableData} />;
+  return (
+    <Styled>
+      <Table columns={columns} data={tableData} />
+    </Styled>
+  );
 };
+
+const Styled = styled.div`
+  padding: 1rem;
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
