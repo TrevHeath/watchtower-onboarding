@@ -39,7 +39,7 @@ const INVITE_USER = gql`
 export default function UserManagement() {
   const [invite, { loading }] = useMutation(INVITE_USER);
   const { data: agencies, loading: loadingAgencies } = useQuery(GET_AGENCIES);
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const { add } = useToasts();
 
   const onInvite = async values => {

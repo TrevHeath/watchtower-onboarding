@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 
 import { Box, Heading, Spinner, Flex, Select } from "theme-ui";

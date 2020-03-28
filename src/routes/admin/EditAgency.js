@@ -1,20 +1,10 @@
 import React, { useState, Fragment, useEffect } from "react";
 import Layout from "../../components/Layout";
 
-import {
-  Button,
-  Label,
-  Input,
-  Box,
-  Heading,
-  Text,
-  Select,
-  Spinner,
-  Styled
-} from "theme-ui";
+import { Button, Label, Input, Box, Heading, Select, Spinner } from "theme-ui";
 import { useForm } from "react-hook-form";
 import { useTable } from "react-table";
-
+import styled from "@emotion/styled";
 import gql from "graphql-tag";
 
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
@@ -78,7 +68,7 @@ export default function UserManagement() {
     RE_SEND_INVITE
   );
   const { data: agencies, loading: loadingAgencies } = useQuery(GET_AGENCIES);
-  const [loadAgency, { called, loading: loadingAgency, data }] = useLazyQuery(
+  const [loadAgency, { loading: loadingAgency, data }] = useLazyQuery(
     GET_AGENCY_DETAILS
   );
 
@@ -236,7 +226,7 @@ export default function UserManagement() {
           )}
           {data && data.agencies[0].users ? (
             <Box py={25}>
-              <Label>Users </Label>
+              <h2>Users </h2>
               <UserTable
                 data={data.agencies[0].users}
                 resendInvite={onResendInvite}
@@ -269,10 +259,9 @@ function Table({ columns, data }) {
     data
   });
 
-  // Render the UI for your table
   return (
-    <Box as="table" {...getTableProps()}>
-      <Box as="thead">
+    <table {...getTableProps()}>
+      <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
@@ -280,20 +269,21 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
-      </Box>
-      <Box as="tbody" {...getTableBodyProps()}>
+      </thead>
+      <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                console.log(cell.value);
+                return <td {...cell.getCellProps()}>{cell.value}</td>;
               })}
             </tr>
           );
         })}
-      </Box>
-    </Box>
+      </tbody>
+    </table>
   );
 }
 
@@ -314,7 +304,7 @@ const UserTable = ({ data, resendInvite }) => {
         accessor: "role"
       },
       {
-        Header: "User Registered",
+        Header: "Registered",
         accessor: value => {
           return value.isSignedUp === true ? "Yes" : "No";
         }
@@ -346,5 +336,43 @@ const UserTable = ({ data, resendInvite }) => {
   );
 
   const tableData = React.useMemo(() => data, []);
-  return <Table columns={columns} data={tableData} />;
+  return (
+    <Styled>
+      <Table columns={columns} data={tableData} />
+    </Styled>
+  );
 };
+
+const Styled = styled.div`
+  padding: 1rem;
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    border-radius: 4px;
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+    th {
+      background-color: ${props => {
+        console.log(props.theme.colors);
+        return props.theme.colors["grayDark"];
+      }};
+      text-align: left;
+      padding: 1rem;
+      color: white;
+    }
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
