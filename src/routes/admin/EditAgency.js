@@ -1,17 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import Layout from "../../components/Layout";
 
-import {
-  Button,
-  Label,
-  Input,
-  Box,
-  Heading,
-  Text,
-  Select,
-  Spinner,
-  Styled
-} from "theme-ui";
+import { Button, Label, Input, Box, Heading, Select, Spinner } from "theme-ui";
 import { useForm } from "react-hook-form";
 import { useTable } from "react-table";
 
@@ -78,7 +68,7 @@ export default function UserManagement() {
     RE_SEND_INVITE
   );
   const { data: agencies, loading: loadingAgencies } = useQuery(GET_AGENCIES);
-  const [loadAgency, { called, loading: loadingAgency, data }] = useLazyQuery(
+  const [loadAgency, { loading: loadingAgency, data }] = useLazyQuery(
     GET_AGENCY_DETAILS
   );
 
@@ -268,8 +258,7 @@ function Table({ columns, data }) {
     columns,
     data
   });
-
-  // Render the UI for your table
+  console.log(rows);
   return (
     <Box as="table" {...getTableProps()}>
       <Box as="thead">
@@ -285,11 +274,15 @@ function Table({ columns, data }) {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <Box as="tr" {...row.getRowProps()}>
               {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                return (
+                  <Box as="td" {...cell.getCellProps()}>
+                    {cell.render("Cell")}
+                  </Box>
+                );
               })}
-            </tr>
+            </Box>
           );
         })}
       </Box>

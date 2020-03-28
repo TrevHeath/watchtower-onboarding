@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Input,
-  Label,
-  Text,
-  Box,
-  Button,
-  Heading,
-  Checkbox,
-  Styled
-} from "theme-ui";
+import { Input, Label, Text, Box, Button, Heading, Checkbox } from "theme-ui";
 
 import Layout from "../../components/Layout";
 import gql from "graphql-tag";
