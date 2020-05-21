@@ -6,7 +6,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) =>
   isLoggedIn() && isAdmin() ? (
     <Component {...rest} />
   ) : (
-    <Redirect from="" to="admin/login" noThrow />
+    <Redirect from="" to="/admin/login" noThrow />
   );
 
 const PublicRoute = ({ component: Component, ...rest }) => (
