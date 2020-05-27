@@ -8,13 +8,13 @@ import {
   Text,
   Input,
   Label,
-  Select
+  Select,
 } from "theme-ui";
 
 import { CustomCheckboxTree as CheckboxTree } from "../components/checkboxTree/checkboxTree";
 import Layout from "../components/Layout";
 
-const mapToOptionTree = options => {
+const mapToOptionTree = (options) => {
   return options.map((i, k) => ({
     label: i.category,
     value: `${i.category} - ${k}`,
@@ -29,11 +29,11 @@ const mapToOptionTree = options => {
             i.subSubCategories.map((subSub, kSubSub) => {
               return {
                 label: subSub,
-                value: `${i.category} / ${sub} / ${subSub} - ${kSub + kSubSub}`
+                value: `${i.category} / ${sub} / ${subSub} - ${kSub + kSubSub}`,
               };
-            })
+            }),
         };
-      })
+      }),
   }));
 };
 
@@ -41,7 +41,7 @@ function normalizeString(str) {
   return str
     .toLowerCase()
     .split(" ")
-    .map(function(word) {
+    .map(function (word) {
       return word[0].toUpperCase() + word.substr(1);
     })
     .join(" ")
@@ -57,9 +57,9 @@ const options = [
       "Pier",
       "Rocks & Jetty",
       "Inshore Holes",
-      "Other"
+      "Other",
     ],
-    subSubCategories: ["Swimmer", "Apparatus", "Other"]
+    subSubCategories: ["Swimmer", "Apparatus", "Other"],
   },
   {
     category: "Preventative Action",
@@ -69,9 +69,9 @@ const options = [
       "Pier",
       "Rocks & Jetty",
       "Inshore Holes",
-      "Other"
+      "Other",
     ],
-    subSubCategories: ["Swimmer", "Apparatus", "Other"]
+    subSubCategories: ["Swimmer", "Apparatus", "Other"],
   },
   {
     category: "Minor Medical Aid",
@@ -83,9 +83,9 @@ const options = [
       "Head Neck Back Injury",
       "Stingray",
       "JellyFish",
-      "Other"
+      "Other",
     ],
-    subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
+    subSubCategories: ["Skating", "Surfing", "Biking", "Other"],
   },
   {
     category: "Major Medical Aid",
@@ -97,9 +97,9 @@ const options = [
       "Head Neck Back Injury",
       "Stingray",
       "JellyFish",
-      "Other"
+      "Other",
     ],
-    subSubCategories: ["Skating", "Surfing", "Biking", "Other"]
+    subSubCategories: ["Skating", "Surfing", "Biking", "Other"],
   },
   {
     category: "Enforcement",
@@ -110,57 +110,56 @@ const options = [
       "Fighting",
       "Smoking",
       "Unsafe Beach Activity",
-      "Other"
-    ]
+      "Other",
+    ],
   },
   {
     category: "Missing Person",
     subCategories: ["Child", "Adult"],
-    subSubCategories: ["Lost", "Found"]
+    subSubCategories: ["Lost", "Found"],
   },
   {
     category: "Contact",
     subCategories: [
       "Public Assist",
       "Public Education",
-      "Providing Information"
-    ]
+      "Providing Information",
+    ],
   },
   {
     category: "Wildlife",
     subCategories: ["Bird", "Mammal", "Shark"],
-    subSubCategories: ["Live", "Dead", "Injured"]
+    subSubCategories: ["Live", "Dead", "Injured"],
   },
   {
     category: "Boat",
-    subCategories: ["Warning", "Tow", "Assist", "Rescue"]
+    subCategories: ["Warning", "Tow", "Assist", "Rescue"],
   },
   {
     category: "Attendance",
-    subCategories: ["Beach", "Surfers", "Bodyboarders", "Lagoon"]
-  }
+    subCategories: ["Beach", "Surfers", "Bodyboarders", "Lagoon"],
+  },
 ];
 
 function Onboarding() {
   const [values, setValues] = useState(options);
   const [inputValues, setInputValues] = useState({ categorySelect: "All" });
 
-  const onInputChange = e => {
-    console.log(values);
+  const onInputChange = (e) => {
     setInputValues({ ...inputValues, [e.target.name]: e.target.value });
   };
 
   const onAdd = (value, name) => {
     try {
       const normalizedValue = normalizeString(value);
-      setValues(prevVals => {
+      setValues((prevVals) => {
         let newVals;
         if (name === "category") {
           newVals = [
             ...prevVals,
             {
-              [name]: normalizedValue
-            }
+              [name]: normalizedValue,
+            },
           ];
         } else {
           prevVals.forEach((c, i) => {
@@ -188,7 +187,7 @@ function Onboarding() {
       });
       setInputValues({
         ...inputValues,
-        [name]: ""
+        [name]: "",
       });
     } catch (e) {
       console.error(e);
@@ -206,7 +205,7 @@ function Onboarding() {
           textAlign: "center",
           fontWeight: "bold",
           bg: "blue",
-          color: "white"
+          color: "white",
         }}
       >
         Please fill out the below form to get your Watchtower configured to your

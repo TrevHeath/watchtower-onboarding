@@ -76,7 +76,7 @@ export default function UserManagement() {
 
   const defaultFormValues = {
     ...(data && data.agencies[0]),
-    ...(data && data.agencies[0].settings)
+    ...(data && data.agencies[0].settings),
   };
   const { add } = useToasts();
 
@@ -84,13 +84,13 @@ export default function UserManagement() {
     if (selectedAgencyId) {
       loadAgency({
         variables: {
-          id: selectedAgencyId
-        }
+          id: selectedAgencyId,
+        },
       });
     }
   }, [selectedAgencyId]);
 
-  const onUpdate = async values => {
+  const onUpdate = async (values) => {
     try {
       if (!selectedAgencyId) {
         add({ content: "Please select an agency to update", variant: "error" });
@@ -101,20 +101,22 @@ export default function UserManagement() {
         settings = {
           settings: {
             update: {
-              surflineSpotId: values.surflineSpotId
-            }
-          }
+              surflineSpotId: values.surflineSpotId,
+            },
+          },
         };
       }
+
+      console.log({ ...settings });
       const res = await updateOneAgency({
         variables: {
           where: {
-            id: selectedAgencyId
+            id: selectedAgencyId,
           },
           data: {
-            ...settings
-          }
-        }
+            ...settings,
+          },
+        },
       });
 
       if (res.data && res.data.updateOneAgency && res.data.updateOneAgency.id) {
@@ -125,7 +127,7 @@ export default function UserManagement() {
     }
   };
 
-  const onResendInvite = async args => {
+  const onResendInvite = async (args) => {
     try {
       if (!selectedAgencyId) {
         add({ content: "Please select an agency to update", variant: "error" });
@@ -156,7 +158,7 @@ export default function UserManagement() {
         <Heading as="h1">Update Agency</Heading>
         <Box py={25}>
           <Select
-            onChange={e => selectAgency(e.target.value)}
+            onChange={(e) => selectAgency(e.target.value)}
             type="select"
             name="agencyId"
           >
@@ -165,9 +167,9 @@ export default function UserManagement() {
             ) : agencies ? (
               [
                 <option value="">Select an agency</option>,
-                ...agencies.agencies.map(a => (
+                ...agencies.agencies.map((a) => (
                   <option value={a.id}>{a.name}</option>
-                ))
+                )),
               ]
             ) : (
               <option>No agencies</option>
@@ -186,15 +188,13 @@ export default function UserManagement() {
                   type="select"
                   name="name"
                   defaultValue={defaultFormValues.name}
-                  ref={ref =>
-                    register({
-                      required: false,
-                      minLength: {
-                        value: 3,
-                        message: "Make sure the name is long enough."
-                      }
-                    })
-                  }
+                  ref={register({
+                    required: false,
+                    minLength: {
+                      value: 3,
+                      message: "Make sure the name is long enough.",
+                    },
+                  })}
                 />
                 <FormError error={errors.name} />
               </Box>
@@ -204,16 +204,14 @@ export default function UserManagement() {
                   type="select"
                   name="surflineSpotId"
                   defaultValue={defaultFormValues.surflineSpotId}
-                  ref={ref =>
-                    register({
-                      required: false,
-                      minLength: {
-                        value: 15,
-                        message:
-                          "Spot ids should looks something like this: 5842041f4e65fad6a77089fa"
-                      }
-                    })
-                  }
+                  ref={register({
+                    required: false,
+                    minLength: {
+                      value: 15,
+                      message:
+                        "Spot ids should looks something like this: 5842041f4e65fad6a77089fa",
+                    },
+                  })}
                 />
                 <FormError error={errors.surflineSpotId} />
               </Box>
@@ -253,18 +251,18 @@ function Table({ columns, data }) {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow
+    prepareRow,
   } = useTable({
     columns,
-    data
+    data,
   });
 
   return (
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
           </tr>
@@ -275,8 +273,7 @@ function Table({ columns, data }) {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                console.log(cell.value);
+              {row.cells.map((cell) => {
                 return <td {...cell.getCellProps()}>{cell.value}</td>;
               })}
             </tr>
@@ -292,34 +289,34 @@ const UserTable = ({ data, resendInvite }) => {
     () => [
       {
         Header: "Name",
-        accessor: "name"
+        accessor: "name",
       },
 
       {
         Header: "Email",
-        accessor: "email"
+        accessor: "email",
       },
       {
         Header: "Role",
-        accessor: "role"
+        accessor: "role",
       },
       {
         Header: "Registered",
-        accessor: value => {
+        accessor: (value) => {
           return value.isSignedUp === true ? "Yes" : "No";
-        }
+        },
       },
       {
         Header: "Resend Invite ",
-        accessor: value => {
+        accessor: (value) => {
           if (value.isSignedUp === false && value.email) {
             return (
               <Button
                 onClick={() =>
                   resendInvite({
                     variables: {
-                      email: value.email
-                    }
+                      email: value.email,
+                    },
                   })
                 }
                 sx={{ variant: "link" }}
@@ -329,8 +326,8 @@ const UserTable = ({ data, resendInvite }) => {
             );
           }
           return <Fragment />;
-        }
-      }
+        },
+      },
     ],
     []
   );
@@ -357,8 +354,7 @@ const Styled = styled.div`
       }
     }
     th {
-      background-color: ${props => {
-        console.log(props.theme.colors);
+      background-color: ${(props) => {
         return props.theme.colors["grayDark"];
       }};
       text-align: left;
