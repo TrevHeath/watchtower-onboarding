@@ -30,43 +30,42 @@ export const CustomCheckboxTree = ({ options }) => {
     setExpanded(getNodeIds(options));
   }, [options]);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputs.agency) {
       return setErrors({ agency: "Please input an agency name" });
     }
     setErrors({});
 
-    const cleanChecked = checked.map(i => i.split(" -")[0]);
+    const cleanChecked = checked.map((i) => i.split(" -")[0]);
 
     fetch(slackUrl, {
       method: "POST",
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        text: ` ${inputs.agency} has submitted their stat form:, \`\`\` ${cleanChecked}\`\`\` `
-      })
+        text: ` ${inputs.agency} has submitted their stat form:, \`\`\` ${cleanChecked}\`\`\` `,
+      }),
     })
-      .then(r => {
-        console.log(r);
+      .then((r) => {
         if (r.ok === true) {
           alert("Stat categories sent successfully");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         setErrors({ form: `Error submitting: ${e}` });
       });
   };
 
   return (
-    <Box as="form" onSubmit={e => handleSubmit(e)}>
+    <Box as="form" onSubmit={(e) => handleSubmit(e)}>
       <Box py={3}>
         <Label htmlFor="agency">My Agency Name</Label>
         <Input
           id="agency"
           name="agency"
-          onChange={e => {
+          onChange={(e) => {
             setInputs({ [e.target.name]: e.target.value });
           }}
         />
@@ -79,10 +78,10 @@ export const CustomCheckboxTree = ({ options }) => {
           expanded={expanded}
           optimisticToggle={false}
           noCascade={true}
-          onCheck={checked => {
+          onCheck={(checked) => {
             return setChecked(checked);
           }}
-          onExpand={expanded => setExpanded(expanded)}
+          onExpand={(expanded) => setExpanded(expanded)}
           icons={{
             check: <span className="rct-icon rct-icon-check" />,
             uncheck: <span className="rct-icon rct-icon-uncheck" />,
@@ -93,7 +92,7 @@ export const CustomCheckboxTree = ({ options }) => {
             collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
             parentClose: null,
             parentOpen: null,
-            leaf: null
+            leaf: null,
           }}
         />
       </Box>

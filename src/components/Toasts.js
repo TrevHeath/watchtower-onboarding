@@ -8,7 +8,7 @@ const Ctx = React.createContext();
 // Styled Components
 // ==============================
 
-const ToastContainer = props => (
+const ToastContainer = (props) => (
   <div
     style={{ position: "fixed", right: 0, top: 0, zIndex: 1000 }}
     {...props}
@@ -18,7 +18,7 @@ const Toast = ({ children, onDismiss, ...rest }) => (
   <Alert
     style={{
       margin: 10,
-      padding: 10
+      padding: 10,
     }}
     onClick={onDismiss}
     {...rest}
@@ -38,15 +38,15 @@ export function ToastProvider({ children }) {
   const add = ({ content, ...rest }) => {
     const id = toastCount++;
     const toast = { content, id, ...rest };
-    console.log(toast);
+
     setToasts([...toasts, toast]);
   };
-  const remove = id => {
-    const newToasts = toasts.filter(t => t.id !== id);
+  const remove = (id) => {
+    const newToasts = toasts.filter((t) => t.id !== id);
     setToasts(newToasts);
   };
   // avoid creating a new fn on every render
-  const onDismiss = id => () => remove(id);
+  const onDismiss = (id) => () => remove(id);
 
   return (
     <Ctx.Provider value={{ add, remove }}>
