@@ -17,7 +17,7 @@ export default {
       "#6c757d",
       "#495057",
       "#343a40",
-      "#212529"
+      "#212529",
     ],
     blue: "#007bff",
     indigo: "#6610f2",
@@ -41,7 +41,7 @@ export default {
     danger: "#dc3545",
     light: "#f8f9fa",
     dark: "#343a40",
-    textMuted: "#6c757d"
+    textMuted: "#6c757d",
   },
   space: ["0rem", "0.25rem", "0.5rem", "1rem", "1.5rem", "3rem"],
   fonts: {
@@ -51,7 +51,7 @@ export default {
     monospace:
       'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     sans:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
   },
   fontSizes: [
     "0.75rem",
@@ -65,7 +65,7 @@ export default {
     "3.5rem",
     "4.5rem",
     "5.5rem",
-    "6rem"
+    "6rem",
   ],
   fontWeights: {
     body: 400,
@@ -73,28 +73,28 @@ export default {
     bold: 700,
     light: 300,
     normal: 400,
-    display: 300
+    display: 300,
   },
   lineHeights: {
     body: 1.5,
-    heading: 1.2
+    heading: 1.2,
   },
   sizes: {
     sm: 540,
     md: 720,
     lg: 960,
-    xl: 1140
+    xl: 1140,
   },
   shadows: {
     default: "0 .5rem 1rem rgba(0, 0, 0, .15)",
     sm: "0 .125rem .25rem rgba(0, 0, 0, .075)",
-    lg: "0 1rem 3rem rgba(0, 0, 0, .175)"
+    lg: "0 1rem 3rem rgba(0, 0, 0, .175)",
   },
   radii: {
     default: "0.25rem",
     sm: "0.2rem",
     lg: "0.3rem",
-    pill: "50rem"
+    pill: "50rem",
   },
   typeStyles: {
     heading: {
@@ -102,59 +102,63 @@ export default {
       fontWeight: "heading",
       lineHeight: "heading",
       mt: 0,
-      mb: 2
+      mb: 2,
     },
     display: {
       fontWeight: "display",
-      lineHeight: "heading"
+      lineHeight: "heading",
     },
     forms: {
       label: {
         fontSize: 1,
-        fontWeight: "bold"
-      }
+        fontWeight: "bold",
+      },
     },
     alerts: {
       primary: {
         color: "white",
-        bg: "primary"
+        bg: "primary",
       },
       error: {
-        bg: "danger"
+        bg: "danger",
       },
       success: {
-        bg: "success"
-      }
+        bg: "success",
+      },
     },
     buttons: {
       primary: {
         color: "white",
-        bg: "primary"
+        bg: "primary",
       },
       link: {
-        bg: "transparent"
+        bg: "transparent",
       },
       success: {
-        bg: "success"
-      }
-    }
+        bg: "success",
+      },
+      secondary: {
+        color: "black",
+        bg: "secondary",
+      },
+    },
   },
   styles: {
     root: {
       fontFamily: "body",
       lineHeight: "body",
-      fontWeight: "body"
+      fontWeight: "body",
     },
     a: {
       color: "primary",
       textDecoration: "none",
       ":hover": {
-        textDecoration: "underline"
-      }
+        textDecoration: "underline",
+      },
     },
     p: {
       mb: 3,
-      lineHeight: "body"
+      lineHeight: "body",
     },
     h1: {
       fontFamily: "heading",
@@ -162,7 +166,7 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 7
+      fontSize: 7,
     },
     h2: {
       fontFamily: "heading",
@@ -170,7 +174,7 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 6
+      fontSize: 6,
     },
     h3: {
       fontFamily: "heading",
@@ -178,7 +182,7 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 5
+      fontSize: 5,
     },
     h4: {
       fontFamily: "heading",
@@ -186,7 +190,7 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 4
+      fontSize: 4,
     },
     h5: {
       fontFamily: "heading",
@@ -194,7 +198,7 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 3
+      fontSize: 3,
     },
     h6: {
       fontFamily: "heading",
@@ -202,17 +206,17 @@ export default {
       lineHeight: "heading",
       mt: 0,
       mb: 2,
-      fontSize: 2
+      fontSize: 2,
     },
     blockquote: {
       fontSize: 3,
-      mb: 3
+      mb: 3,
     },
     table: {
       width: "100%",
       marginBottom: 3,
       color: "gray.9",
-      borderCollapse: "collapse"
+      borderCollapse: "collapse",
     },
     th: {
       verticalAlign: "bottom",
@@ -223,23 +227,23 @@ export default {
       borderBottomStyle: "solid",
       borderBottomColor: "gray.3",
       padding: ".75rem",
-      textAlign: "inherit"
+      textAlign: "inherit",
     },
     td: {
       borderBottomWidth: 2,
       borderBottomStyle: "solid",
       borderBottomColor: "gray.3",
       verticalAlign: "top",
-      padding: ".75rem"
+      padding: ".75rem",
     },
     inlineCode: {
-      color: "pink"
+      color: "pink",
     },
     img: {
       maxWidth: "100%",
-      height: "auto"
-    }
-  }
+      height: "auto",
+    },
+  },
 
   // styles: {
   //   ...theme.styles,
