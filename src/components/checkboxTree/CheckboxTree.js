@@ -17,16 +17,21 @@ function getNodeIds(nodes) {
   return ids;
 }
 
-export const CustomCheckboxTree = ({ options }) => {
+export const CustomCheckboxTree = ({ options, handleClear }) => {
   const [nodes, setNodes] = useState(options);
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState();
   const [checked, setChecked] = useState();
+
   const [expanded, setExpanded] = useState();
 
   React.useEffect(() => {
     setNodes(options);
-    setChecked(getNodeIds(options));
+    setChecked((prev) => {
+      return getNodeIds(options).filter((i) =>
+        prev ? prev.includes(i) : true
+      );
+    });
     setExpanded(getNodeIds(options));
   }, [options]);
 
@@ -72,14 +77,15 @@ export const CustomCheckboxTree = ({ options }) => {
         {errors && errors.agency && <Box color="red">{errors.agency}</Box>}
       </Box>
       <Box py={3}>
+        {nodes.length < 1 && <div>No stats to select.</div>}
         <CheckboxTree
           nodes={nodes}
           checked={checked}
           expanded={expanded}
           optimisticToggle={false}
           noCascade={true}
-          onCheck={(checked) => {
-            return setChecked(checked);
+          onCheck={(checkedInput) => {
+            return setChecked(checkedInput);
           }}
           onExpand={(expanded) => setExpanded(expanded)}
           icons={{
@@ -97,6 +103,16 @@ export const CustomCheckboxTree = ({ options }) => {
         />
       </Box>
       <Button>Submit categories</Button>
+
+      <Button
+        style={{ marginLeft: 10 }}
+        variant="secondary"
+        onClick={() => handleClear()}
+        type="button"
+      >
+        Clear Checkboxes
+      </Button>
+
       {errors && errors.form && <Box color="red">{errors.form}</Box>}
     </Box>
   );

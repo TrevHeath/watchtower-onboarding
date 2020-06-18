@@ -149,6 +149,10 @@ function Onboarding() {
     setInputValues({ ...inputValues, [e.target.name]: e.target.value });
   };
 
+  const onClear = () => {
+    setValues([]);
+  };
+
   const onAdd = (value, name) => {
     try {
       const normalizedValue = normalizeString(value);
@@ -223,7 +227,7 @@ function Onboarding() {
           <Text sx={{ fontSize: 13 }} pb={3}>
             Check the categories you would like to capture
           </Text>
-          <CheckboxTree options={mappedOptions} />
+          <CheckboxTree options={mappedOptions} handleClear={onClear} />
         </Box>
         <Flex p={3} sx={{ width: ["100%", "50%"], flexDirection: "column" }}>
           <Heading pb={1}>Custom Categories</Heading>
