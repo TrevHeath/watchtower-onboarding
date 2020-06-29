@@ -14,18 +14,20 @@ const ToastContainer = (props) => (
     {...props}
   />
 );
-const Toast = ({ children, onDismiss, ...rest }) => (
-  <Alert
-    style={{
-      margin: 10,
-      padding: 10,
-    }}
-    onClick={onDismiss}
-    {...rest}
-  >
-    {children}
-  </Alert>
-);
+const Toast = ({ children, onDismiss, ...rest }) => {
+  return (
+    <Alert
+      style={{
+        margin: 10,
+        padding: 10,
+      }}
+      onClick={onDismiss}
+      {...rest}
+    >
+      {children}
+    </Alert>
+  );
+};
 
 // Provider
 // ==============================

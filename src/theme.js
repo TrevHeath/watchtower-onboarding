@@ -96,51 +96,52 @@ export default {
     lg: "0.3rem",
     pill: "50rem",
   },
-  typeStyles: {
-    heading: {
-      fontFamily: "heading",
-      fontWeight: "heading",
-      lineHeight: "heading",
-      mt: 0,
-      mb: 2,
+  alerts: {
+    primary: {
+      color: "white",
+      bg: "primary",
     },
-    display: {
-      fontWeight: "display",
-      lineHeight: "heading",
+    error: {
+      bg: "danger",
     },
-    forms: {
-      label: {
-        fontSize: 1,
-        fontWeight: "bold",
-      },
+    success: {
+      bg: "success",
     },
-    alerts: {
-      primary: {
-        color: "white",
-        bg: "primary",
-      },
-      error: {
-        bg: "danger",
-      },
-      success: {
-        bg: "success",
-      },
+  },
+
+  heading: {
+    fontFamily: "heading",
+    fontWeight: "heading",
+    lineHeight: "heading",
+    mt: 0,
+    mb: 2,
+  },
+  display: {
+    fontWeight: "display",
+    lineHeight: "heading",
+  },
+  forms: {
+    label: {
+      fontSize: 1,
+      fontWeight: "bold",
     },
-    buttons: {
-      primary: {
-        color: "white",
-        bg: "primary",
-      },
-      link: {
-        bg: "transparent",
-      },
-      success: {
-        bg: "success",
-      },
-      secondary: {
-        color: "black",
-        bg: "secondary",
-      },
+  },
+
+  buttons: {
+    primary: {
+      color: "white",
+      bg: "primary",
+    },
+    link: {
+      bg: "transparent",
+      color: "primary",
+    },
+    success: {
+      bg: "success",
+    },
+    secondary: {
+      color: "black",
+      bg: "secondary",
     },
   },
   styles: {
