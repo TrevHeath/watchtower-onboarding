@@ -9,6 +9,8 @@ import gql from "graphql-tag";
 
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { useToasts } from "../../components/Toasts";
+import { checkFieldIsDirty } from "../../utils";
+import uniqWith from "lodash/uniqWith";
 
 const GET_AGENCY_DETAILS = gql`
   query GetAgencyDetails($id: String!) {
@@ -21,6 +23,13 @@ const GET_AGENCY_DETAILS = gql`
         email
         role
         isSignedUp
+      }
+      activities(orderBy: { label: asc }) {
+        id
+        label
+        subLabelOne
+        subLabelTwo
+        subLabelThree
       }
       settings {
         id
@@ -63,7 +72,9 @@ const RE_SEND_INVITE = gql`
 
 export default function UserManagement() {
   const [selectedAgencyId, selectAgency] = useState(null);
-  const [updateOneAgency, { loading }] = useMutation(UPDATE_AGENCY);
+  const [updateOneAgency, { loading }] = useMutation(UPDATE_AGENCY, {
+    refetchQueries: ["GetAgencyDetails"],
+  });
   const [resendInvite, { loading: resendingInvite }] = useMutation(
     RE_SEND_INVITE
   );
@@ -72,7 +83,11 @@ export default function UserManagement() {
     GET_AGENCY_DETAILS
   );
 
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, formState, reset } = useForm({
+    mode: "onChange",
+  });
+
+  const { dirty, isSubmitting, touched, submitCount, dirtyFields } = formState;
 
   const defaultFormValues = {
     ...(data && data.agencies[0]),
@@ -90,39 +105,101 @@ export default function UserManagement() {
     }
   }, [selectedAgencyId]);
 
+  const dirtyFieldsArray = Array.from(dirtyFields);
+
   const onUpdate = async (values) => {
     try {
-      if (!selectedAgencyId) {
-        add({ content: "Please select an agency to update", variant: "error" });
+      if (!dirty) {
+        add({ content: "No updates made.", variant: "error" });
         return;
       }
-      let settings = {};
-      if (values.surflineSpotId) {
-        settings = {
-          settings: {
-            update: {
-              surflineSpotId: values.surflineSpotId,
-            },
+      if (!selectedAgencyId) {
+        add({
+          content: "Please select an agency to update.",
+          variant: "error",
+        });
+        return;
+      }
+      let connections = {};
+      if (
+        checkFieldIsDirty(dirtyFieldsArray, "surflineSpotId") &&
+        values.surflineSpotId
+      ) {
+        connections.settings = {
+          update: {
+            surflineSpotId: values.surflineSpotId,
           },
         };
       }
 
-      console.log({ ...settings });
+      let updatedActivities = [];
+      let newActivities = [];
+
+      dirtyFieldsArray.length > 0 &&
+        uniqWith(dirtyFieldsArray, (i, b) => {
+          console.log(
+            i.split(/\.(?=[^\.]+$)/)[0] === b.split(/\.(?=[^\.]+$)/)[0]
+          );
+          return i.split(/\.(?=[^\.]+$)/)[0] === b.split(/\.(?=[^\.]+$)/)[0];
+        }).map((d) => {
+          if (d.includes("activities")) {
+            const split = d.split(".");
+            const currentLabel = values.activities[split[1]];
+
+            if (split[1].startsWith("newLabel")) {
+              newActivities.push({
+                label: createActivtyTypeLabel(
+                  currentLabel.subLabelOne,
+                  currentLabel.subLabelTwo,
+                  currentLabel.subLabelThree
+                ),
+              });
+              return;
+            }
+
+            updatedActivities.push({
+              where: { id: split[1] },
+              data: {
+                label: createActivtyTypeLabel(
+                  currentLabel.subLabelOne,
+                  currentLabel.subLabelTwo,
+                  currentLabel.subLabelThree
+                ),
+              },
+            });
+          }
+          return;
+        });
+
+      if (updatedActivities.length > 0) {
+        connections.activities = {
+          update: updatedActivities,
+        };
+      }
+
+      if (newActivities.length > 0) {
+        connections.activities = {
+          create: newActivities,
+        };
+      }
+
       const res = await updateOneAgency({
         variables: {
           where: {
             id: selectedAgencyId,
           },
           data: {
-            ...settings,
+            ...connections,
           },
         },
       });
 
       if (res.data && res.data.updateOneAgency && res.data.updateOneAgency.id) {
         add({ content: "Agency Updated", variant: "success" });
+        reset();
       }
     } catch (e) {
+      console.log(e.message);
       add({ content: e.message, variant: "error" });
     }
   };
@@ -215,6 +292,21 @@ export default function UserManagement() {
                 />
                 <FormError error={errors.surflineSpotId} />
               </Box>
+              <Box>
+                {data && data.agencies[0].activities ? (
+                  <Box py={25}>
+                    <h2>Categories </h2>
+                    <ActivitiesTable
+                      data={data.agencies[0].activities}
+                      registerForm={register}
+                      dirtyFields={dirtyFieldsArray}
+                    />
+                    <FormError error={errors.activities} />
+                  </Box>
+                ) : (
+                  <Fragment />
+                )}
+              </Box>
               <Box py={25}>
                 <Button block type="submit">
                   {loading ? "Updating..." : "Update"}
@@ -222,6 +314,7 @@ export default function UserManagement() {
               </Box>
             </Box>
           )}
+
           {data && data.agencies[0].users ? (
             <Box py={25}>
               <h2>Users </h2>
@@ -319,6 +412,7 @@ const UserTable = ({ data, resendInvite }) => {
                     },
                   })
                 }
+                variant="link"
                 sx={{ variant: "link" }}
               >
                 Resend Invite
@@ -338,6 +432,118 @@ const UserTable = ({ data, resendInvite }) => {
       <Table columns={columns} data={tableData} />
     </Styled>
   );
+};
+
+const ActivitiesTable = ({ data, dirtyFields, registerForm }) => {
+  const [tableData, setTableData] = useState(data);
+
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Label",
+        accessor: "label",
+      },
+      {
+        Header: "Label One",
+        accessor: (value) => {
+          const fieldName = `activities.${value.id}.subLabelOne`;
+          return (
+            <Input
+              name={fieldName}
+              defaultValue={value.subLabelOne}
+              sx={{
+                border: dirtyFields.includes(fieldName)
+                  ? "3px solid green"
+                  : "1px solid black",
+              }}
+              ref={registerForm({
+                required: false,
+              })}
+            />
+          );
+        },
+      },
+      {
+        Header: "Label Two",
+        accessor: (value) => {
+          const fieldName = `activities.${value.id}.subLabelTwo`;
+          return (
+            <Input
+              name={fieldName}
+              defaultValue={value.subLabelTwo}
+              sx={{
+                border: dirtyFields.includes(fieldName)
+                  ? "3px solid green"
+                  : "1px solid black",
+              }}
+              ref={registerForm({
+                required: false,
+              })}
+            />
+          );
+        },
+      },
+      {
+        Header: "Label Three",
+        accessor: (value) => {
+          const fieldName = `activities.${value.id}.subLabelThree`;
+          return (
+            <Input
+              name={fieldName}
+              defaultValue={value.subLabelThree}
+              sx={{
+                border: dirtyFields.includes(fieldName)
+                  ? "3px solid green"
+                  : "1px solid black",
+              }}
+              ref={registerForm({
+                required: false,
+              })}
+            />
+          );
+        },
+      },
+    ],
+    [dirtyFields]
+  );
+
+  return (
+    <Styled>
+      <Table columns={columns} data={tableData} />
+      <Button
+        type="button"
+        sx={{ marginTop: 10 }}
+        onClick={() =>
+          setTableData((prev) => [
+            ...prev,
+            {
+              id: "newLabel" + (prev.length + 1),
+              label: "",
+              subLabelOne: "",
+              subLabelTwo: "",
+              subLabelThree: "",
+            },
+          ])
+        }
+      >
+        + Add New Label
+      </Button>
+    </Styled>
+  );
+};
+
+export const createActivtyTypeLabel = (labelOne, labelTwo, labelThree) => {
+  if (!labelThree && !labelTwo) {
+    return `${labelOne}`;
+  }
+  if (!labelThree) {
+    return `${labelOne} / ${labelTwo}`;
+  }
+  return `${labelOne} / ${labelTwo} / ${labelThree}`;
 };
 
 const Styled = styled.div`
