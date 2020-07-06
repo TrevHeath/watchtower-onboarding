@@ -18,7 +18,7 @@ export default () => {
         bg: "black",
         color: "white",
         fontWeight: "bold",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}
     >
       <Flex sx={{ flex: 1 }}>
@@ -44,6 +44,15 @@ export default () => {
           <Link
             getProps={isActive}
             style={{ color: "inherit", textDecoration: "none" }}
+            to="/admin/create-notifications"
+          >
+            Create Notifications
+          </Link>
+        </Box>
+        <Box color="white" p={2}>
+          <Link
+            getProps={isActive}
+            style={{ color: "inherit", textDecoration: "none" }}
             to="/admin/users"
           >
             Invite Users
@@ -62,7 +71,7 @@ export default () => {
       <Box p={2}>
         <NavLink
           href="/agency/stats"
-          onClick={event => {
+          onClick={(event) => {
             event.preventDefault();
             logout(() => navigate(`/admin/login`));
           }}
