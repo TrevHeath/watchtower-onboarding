@@ -122,7 +122,7 @@ export default function UserManagement() {
             <Input
               name="url"
               ref={register({
-                required: true,
+                required: false,
               })}
             />
             <FormError error={errors.url} />
