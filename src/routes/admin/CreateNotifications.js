@@ -38,7 +38,13 @@ export default function UserManagement() {
     mode: "onChange",
   });
 
-  const { dirty, isSubmitting, touched, submitCount, dirtyFields } = formState;
+  const {
+    isDirty,
+    isSubmitting,
+    touched,
+    submitCount,
+    dirtyFields,
+  } = formState;
 
   const { add } = useToasts();
 
@@ -46,7 +52,7 @@ export default function UserManagement() {
     try {
       let connections = {};
 
-      if (isEmpty(values)) {
+      if (!isDirty) {
         add({ content: "No updates made.", variant: "error" });
         return;
       }
@@ -58,7 +64,7 @@ export default function UserManagement() {
           },
         };
       }
-      console.log(values);
+
       const res = await createNotification({
         variables: {
           data: {
