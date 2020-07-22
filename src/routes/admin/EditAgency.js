@@ -11,6 +11,7 @@ import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { useToasts } from "../../components/Toasts";
 import { checkFieldIsDirty } from "../../utils";
 import uniqWith from "lodash/uniqWith";
+import { isEmpty } from "lodash";
 
 const GET_AGENCY_DETAILS = gql`
   query GetAgencyDetails($id: String!) {
