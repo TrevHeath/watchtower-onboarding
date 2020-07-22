@@ -107,6 +107,7 @@ export default function UserManagement() {
   }, [selectedAgencyId]);
 
   const dirtyFieldsArray = Array.from(dirtyFields);
+  console.log(dirtyFieldsArray);
 
   const onUpdate = async (values) => {
     try {
