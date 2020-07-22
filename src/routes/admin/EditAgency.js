@@ -110,6 +110,7 @@ export default function UserManagement() {
 
   const onUpdate = async (values) => {
     try {
+      console.log(values);
       if (isEmpty(values)) {
         add({ content: "No updates made.", variant: "error" });
         return;

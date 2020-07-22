@@ -45,7 +45,7 @@ export default function UserManagement() {
   const onCreate = async (values) => {
     try {
       let connections = {};
-      console.log(dirty, values);
+
       if (isEmpty(values)) {
         add({ content: "No updates made.", variant: "error" });
         return;
