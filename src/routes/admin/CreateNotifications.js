@@ -38,13 +38,13 @@ export default function UserManagement() {
   });
 
   const { dirty } = formState;
-  console.log(dirty);
+
   const { add } = useToasts();
 
   const onCreate = async (values) => {
     try {
       let connections = {};
-      console.log(dirty);
+      console.log(dirty, values);
       if (!dirty) {
         add({ content: "No updates made.", variant: "error" });
         return;
