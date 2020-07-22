@@ -119,10 +119,14 @@ export default function UserManagement() {
           </Box>
           <Box py={25}>
             <Label>Url</Label>
+            <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+              Must be a full url (https://google.com) or a route in the app
+              (agency/dispatches)
+            </Box>
             <Input
               name="url"
               ref={register({
-                required: true,
+                required: false,
               })}
             />
             <FormError error={errors.url} />
