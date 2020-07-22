@@ -108,6 +108,7 @@ export default function UserManagement() {
   const dirtyFieldsArray = Array.from(dirtyFields);
 
   const onUpdate = async (values) => {
+    console.log(dirtyFields);
     try {
       if (!dirty) {
         add({ content: "No updates made.", variant: "error" });

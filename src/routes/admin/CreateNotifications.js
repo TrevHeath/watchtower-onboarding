@@ -9,6 +9,7 @@ import gql from "graphql-tag";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useToasts } from "../../components/Toasts";
+import { isEmpty } from "lodash";
 
 const GET_AGENCIES = gql`
   query GetAgencies($where: AgencyWhereInput) {
@@ -45,7 +46,7 @@ export default function UserManagement() {
     try {
       let connections = {};
       console.log(dirty, values);
-      if (!dirty) {
+      if (isEmpty(values)) {
         add({ content: "No updates made.", variant: "error" });
         return;
       }
