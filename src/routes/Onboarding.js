@@ -146,7 +146,10 @@ function Onboarding() {
   const [inputValues, setInputValues] = useState({ categorySelect: "All" });
 
   const onInputChange = (e) => {
-    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
+    setInputValues({
+      ...inputValues,
+      [e.target.name]: e.target.value && e.target.value.trim(),
+    });
   };
 
   const onClear = () => {
