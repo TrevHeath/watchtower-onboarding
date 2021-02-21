@@ -36,6 +36,10 @@ const GET_AGENCY_DETAILS = gql`
         surflineSpotId
         dispatching
         incidentReporting
+        nwsOfficegridXgridY
+        noaaTidesStation
+        latitude
+        longitude
         epcr
       }
     }
@@ -105,12 +109,12 @@ export default function UserManagement() {
     }
   }, [selectedAgencyId]);
 
-  const dirtyFieldsArray = Array.from(dirtyFields);
-
+  const dirtyFieldsArray = Object.keys(dirtyFields);
+  console.log(dirtyFieldsArray, dirtyFields);
   const onUpdate = async (values) => {
-    console.log(dirtyFields);
+    console.log(dirtyFields, dirty);
     try {
-      if (!dirty) {
+      if (!dirtyFields || Object.keys(dirtyFields).length === 0) {
         add({ content: "No updates made.", variant: "error" });
         return;
       }
@@ -122,17 +126,27 @@ export default function UserManagement() {
         return;
       }
       let connections = {};
-      if (
-        checkFieldIsDirty(dirtyFieldsArray, "surflineSpotId") &&
-        values.surflineSpotId
-      ) {
-        connections.settings = {
-          update: {
-            surflineSpotId: values.surflineSpotId,
-          },
-        };
-      }
 
+      connections.settings = {
+        update: {
+          ...(checkFieldIsDirty(dirtyFieldsArray, "surflineSpotId") && {
+            surflineSpotId: values.surflineSpotId,
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "longitude") && {
+            longitude: parseFloat(values.longitude),
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "latitude") && {
+            latitude: parseFloat(values.latitude),
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "noaaTidesStation") && {
+            noaaTidesStation: values.noaaTidesStation,
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "nwsOfficegridXgridY") && {
+            nwsOfficegridXgridY: values.nwsOfficegridXgridY,
+          }),
+        },
+      };
+      console.log(connections.settings);
       let updatedActivities = [];
       let newActivities = [];
 
@@ -292,6 +306,54 @@ export default function UserManagement() {
                   })}
                 />
                 <FormError error={errors.surflineSpotId} />
+              </Box>
+              <Box py={25}>
+                <Label>noaaTidesStation</Label>
+                <Input
+                  type="select"
+                  name="noaaTidesStation"
+                  defaultValue={defaultFormValues.noaaTidesStation}
+                  ref={register({
+                    required: false,
+                  })}
+                />
+                <FormError error={errors.noaaTidesStation} />
+              </Box>
+              <Box py={25}>
+                <Label>nwsOfficegridXgridY</Label>
+                <Input
+                  type="select"
+                  name="nwsOfficegridXgridY"
+                  defaultValue={defaultFormValues.nwsOfficegridXgridY}
+                  ref={register({
+                    required: false,
+                  })}
+                />
+                <FormError error={errors.nwsOfficegridXgridY} />
+              </Box>
+              <Box py={25}>
+                <Label>Lat</Label>
+                <Input
+                  type="select"
+                  name="latitude"
+                  defaultValue={defaultFormValues.latitude}
+                  ref={register({
+                    required: false,
+                  })}
+                />
+                <FormError error={errors.latitude} />
+              </Box>
+              <Box py={25}>
+                <Label>Long</Label>
+                <Input
+                  type="select"
+                  name="longitude"
+                  defaultValue={defaultFormValues.longitude}
+                  ref={register({
+                    required: false,
+                  })}
+                />
+                <FormError error={errors.longitude} />
               </Box>
               <Box>
                 {data && data.agencies[0].activities ? (

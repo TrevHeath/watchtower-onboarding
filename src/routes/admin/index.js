@@ -27,7 +27,7 @@ const CardFooter = ({ children }) => {
         right: 0,
         left: 0,
         height: "auto",
-        textAlign: "right"
+        textAlign: "right",
       }}
     >
       {children}
@@ -69,6 +69,31 @@ const Admin = () => {
                   {values.surflineSpotId}
                 </div>
               )}
+              {values.nwsOfficegridXgridY && (
+                <div>
+                  <Heading as="h3">nwsOfficegridXgridY:</Heading>
+                  {values.nwsOfficegridXgridY}
+                </div>
+              )}
+              {values.noaaTidesStation && (
+                <div>
+                  <Heading as="h3">noaaTidesStation:</Heading>
+                  {values.noaaTidesStation}
+                </div>
+              )}
+              {values.latitude && (
+                <div>
+                  <Heading as="h3">latitude:</Heading>
+                  {values.latitude}
+                </div>
+              )}
+              {values.longitude && (
+                <div>
+                  <Heading as="h3">longitude:</Heading>
+                  {values.longitude}
+                </div>
+              )}
+
               {values.stats && (
                 <div>
                   <Heading as="h3">Stats:</Heading>
@@ -110,8 +135,8 @@ const Admin = () => {
                   try {
                     const res = await onboard({
                       variables: {
-                        ...gqlArgs
-                      }
+                        ...gqlArgs,
+                      },
                     });
 
                     if (
@@ -154,15 +179,15 @@ const Admin = () => {
   function handleChange(e, field) {
     let cleanValue;
     if (e.target.name === "stats") {
-      cleanValue = e.target.value.split(",").map(i => toTitleCase(i.trim()));
+      cleanValue = e.target.value.split(",").map((i) => toTitleCase(i.trim()));
     }
     if (e.target.name === "positions") {
       const removeFront = e.target.value.split(",");
 
       cleanValue = removeFront
-        ? removeFront.map(i => ({
+        ? removeFront.map((i) => ({
             name: i && toTitleCase(i.trim()),
-            dispatchable: false
+            dispatchable: false,
           }))
         : "";
     }
@@ -175,15 +200,15 @@ const Admin = () => {
       }
 
       cleanValue = removeFront
-        ? removeFront.map(i => ({
-            name: i && toTitleCase(i.trim())
+        ? removeFront.map((i) => ({
+            name: i && toTitleCase(i.trim()),
           }))
         : "";
     }
 
     setValues({
       ...values,
-      [e.target.name]: cleanValue || toTitleCase(e.target.value)
+      [e.target.name]: cleanValue || toTitleCase(e.target.value),
     });
   }
 
@@ -202,7 +227,7 @@ const Admin = () => {
         sx={{ maxWidth: "1200px", margin: "auto" }}
         py={45}
         as="form"
-        onSubmit={e => e.preventDefault()}
+        onSubmit={(e) => e.preventDefault()}
       >
         <Heading as="h1">Create an agency</Heading>
         <Text>Input information to create an agency</Text>
@@ -230,6 +255,48 @@ const Admin = () => {
         </Box>
         <Box py={25}>
           {" "}
+          <Label>nws Office gridXgridY</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>
+              You can find this at on the national weather service api
+            </strong>
+            <br />
+          </Box>
+          <Input
+            id="nwsOfficegridXgridY"
+            name="nwsOfficegridXgridY"
+            onChange={handleChange}
+          />
+        </Box>
+        <Box py={25}>
+          {" "}
+          <Label>noaaTidesStation</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
+            <strong>You can find this on the noaa home for tides.</strong>
+            <br />
+            https://tidesandcurrents.noaa.gov/stationhome.html
+          </Box>
+          <Input
+            id="noaaTidesStation"
+            name="noaaTidesStation"
+            onChange={handleChange}
+          />
+        </Box>
+        <Box py={25}>
+          {" "}
+          <Label>latitude</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}></Box>
+          <Input id="latitude" name="latitude" onChange={handleChange} />
+        </Box>
+        <Box py={25}>
+          {" "}
+          <Label>longitude</Label>
+          <Box bg="primary" m={3} p={3} sx={{ color: "white" }}></Box>
+          <Input id="longitude" name="longitude" onChange={handleChange} />
+        </Box>
+
+        <Box py={25}>
+          {" "}
           <Label>Stats</Label>
           <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
             <strong>
@@ -245,9 +312,9 @@ const Admin = () => {
             name="stats"
             rows="15"
             style={{
-              width: "100%"
+              width: "100%",
             }}
-            onChange={e => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Box>
         <Box py={25}>
@@ -277,9 +344,9 @@ const Admin = () => {
             name="users"
             rows="15"
             style={{
-              width: "100%"
+              width: "100%",
             }}
-            onChange={e => handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Box>
         <Box py={25}>
@@ -341,33 +408,33 @@ const Admin = () => {
   );
 };
 
-const formatGqlArgs = data => {
+const formatGqlArgs = (data) => {
   let args = {
     agencyName: data.agencyName,
     activities: data.stats,
-    surflineSpotId: data.surflineSpotId
+    surflineSpotId: data.surflineSpotId,
   };
   if (data.users) {
     args.users = {
-      create: data.users.map(u => ({
-        name: u.name
-      }))
+      create: data.users.map((u) => ({
+        name: u.name,
+      })),
     };
   }
 
   if (data.positions) {
     args.positions = {
-      create: data.positions.map(u => ({
+      create: data.positions.map((u) => ({
         name: u.name,
-        dispatchable: data[u.name] ? true : false
-      }))
+        dispatchable: data[u.name] ? true : false,
+      })),
     };
   }
 
   return {
     data: {
-      ...args
-    }
+      ...args,
+    },
   };
 };
 

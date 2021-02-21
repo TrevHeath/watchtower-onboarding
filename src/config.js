@@ -6,16 +6,17 @@ if (process.env.NODE_STAGE !== "production") {
 }
 
 const config = {
+  GRAPHQL_URL: "http://localhost:3000/",
   staging: { GRAPHQL_URL: process.env.REACT_APP_STAGING_GRAPHQL_URL },
   production: {
-    GRAPHQL_URL: process.env.REACT_APP_PRODUCTION_GRAPHQL_URL
+    GRAPHQL_URL: process.env.REACT_APP_PRODUCTION_GRAPHQL_URL,
   },
-  slackUrl: process.env.REACT_APP_SLACK_URL
+  slackUrl: process.env.REACT_APP_SLACK_URL,
 };
 
 const flattenedConfig = {
   ...config,
-  ...config[process.env.REACT_APP_STAGE]
+  ...config[process.env.REACT_APP_STAGE],
 };
 
 export default flattenedConfig;
