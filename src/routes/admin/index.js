@@ -272,9 +272,12 @@ const Admin = () => {
           {" "}
           <Label>noaaTidesStation</Label>
           <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
-            <strong>You can find this on the noaa home for tides.</strong>
+            <strong>
+              You can find this on the noaa home for tides. Choose the closes
+              location id. should look like this: TWC0399 or 9410152
+            </strong>
             <br />
-            https://tidesandcurrents.noaa.gov/stationhome.html
+            https://tidesandcurrents.noaa.gov/tide_predictions.html
           </Box>
           <Input
             id="noaaTidesStation"
