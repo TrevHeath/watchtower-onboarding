@@ -1,7 +1,16 @@
 import React, { useState, Fragment, useEffect } from "react";
 import Layout from "../../components/Layout";
 
-import { Button, Label, Input, Box, Heading, Select, Spinner } from "theme-ui";
+import {
+  Button,
+  Label,
+  Input,
+  Box,
+  Heading,
+  Select,
+  Spinner,
+  Flex,
+} from "theme-ui";
 import { useForm } from "react-hook-form";
 import { useTable } from "react-table";
 import styled from "@emotion/styled";
@@ -41,6 +50,10 @@ const GET_AGENCY_DETAILS = gql`
         latitude
         longitude
         epcr
+        modules {
+          key
+          value
+        }
       }
     }
   }
@@ -110,9 +123,8 @@ export default function UserManagement() {
   }, [selectedAgencyId]);
 
   const dirtyFieldsArray = Object.keys(dirtyFields);
-  console.log(dirtyFieldsArray, dirtyFields);
+
   const onUpdate = async (values) => {
-    console.log(dirtyFields, dirty);
     try {
       if (!dirtyFields || Object.keys(dirtyFields).length === 0) {
         add({ content: "No updates made.", variant: "error" });
@@ -144,9 +156,18 @@ export default function UserManagement() {
           ...(checkFieldIsDirty(dirtyFieldsArray, "nwsOfficegridXgridY") && {
             nwsOfficegridXgridY: values.nwsOfficegridXgridY,
           }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "incidentReporting") && {
+            incidentReporting: values.incidentReporting,
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "dispatching") && {
+            dispatching: values.dispatching,
+          }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "comms") && {
+            comms: values.comms,
+          }),
         },
       };
-      console.log(connections.settings);
+
       let updatedActivities = [];
       let newActivities = [];
 
@@ -248,6 +269,7 @@ export default function UserManagement() {
     >
       <Box sx={{ maxWidth: "1200px", margin: "auto" }} py={45}>
         <Heading as="h1">Update Agency</Heading>
+
         <Box py={25}>
           <Select
             onChange={(e) => selectAgency(e.target.value)}
@@ -258,9 +280,13 @@ export default function UserManagement() {
               <option>loading...</option>
             ) : agencies ? (
               [
-                <option value="">Select an agency</option>,
-                ...agencies.agencies.map((a) => (
-                  <option value={a.id}>{a.name}</option>
+                <option key={-1} value="">
+                  Select an agency
+                </option>,
+                ...agencies.agencies.map((a, k) => (
+                  <option key={k} value={a.id}>
+                    {a.name}
+                  </option>
                 )),
               ]
             ) : (
@@ -274,6 +300,26 @@ export default function UserManagement() {
             <Spinner />
           ) : (
             <Box as="form" onSubmit={handleSubmit(onUpdate)}>
+              <Flex>
+                {defaultFormValues &&
+                  defaultFormValues.modules &&
+                  defaultFormValues.modules.map((v, k) => {
+                    return (
+                      <Flex key={k} px={10}>
+                        <Label>{v.key}</Label>
+                        <input
+                          type="checkbox"
+                          name={v.key}
+                          ref={register({
+                            required: false,
+                          })}
+                          defaultChecked={v.value}
+                        />
+                        <FormError error={errors[v.key]} />
+                      </Flex>
+                    );
+                  })}
+              </Flex>
               <Box py={25}>
                 <Label>Name</Label>
                 <Input
@@ -416,8 +462,8 @@ function Table({ columns, data }) {
   return (
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+        {headerGroups.map((headerGroup, k) => (
+          <tr key={k} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>{column.render("Header")}</th>
             ))}
@@ -428,7 +474,7 @@ function Table({ columns, data }) {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr key={i} {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return <td {...cell.getCellProps()}>{cell.value}</td>;
               })}

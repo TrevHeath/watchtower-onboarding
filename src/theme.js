@@ -1,7 +1,3 @@
-import theme from "@theme-ui/preset-bootstrap";
-
-import nightOwl from "@theme-ui/prism/presets/night-owl.json";
-
 export default {
   breakpoints: ["576px", "768px", "992px", "1200px"],
   colors: {
