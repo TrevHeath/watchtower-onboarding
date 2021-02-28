@@ -486,12 +486,82 @@ function Table({ columns, data }) {
   );
 }
 
+const UPDATE_USER = gql`
+  mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserUpdateInput!) {
+    updateOneUser(where: $where, data: $data) {
+      id
+      role
+      email
+      name
+    }
+  }
+`;
+
+export const UserNameInput = ({ userId, currentName = "" }) => {
+  const { register, handleSubmit, reset, formState } = useForm({
+    mode: "onChange",
+  });
+
+  const { isDirty } = formState;
+  console.log(formState);
+
+  const [updateUserRole, { error }] = useMutation(UPDATE_USER);
+  const { add } = useToasts();
+
+  async function onSubmit(values) {
+    try {
+      const res = await updateUserRole({
+        variables: {
+          where: { id: userId },
+          data: { name: values.name },
+        },
+      });
+
+      if (!res.error) {
+        add({
+          color: "success",
+          content: "Name updated",
+        });
+      }
+      reset();
+    } catch (e) {
+      console.log(e);
+      add({
+        color: "danger",
+        content: e,
+      });
+    }
+  }
+
+  return (
+    <Box
+      as="form"
+      style={{ display: "flex", alignItems: "center" }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <Input
+        id="name"
+        name="name"
+        defaultValue={currentName}
+        ref={register({
+          required: false,
+        })}
+      />
+      {isDirty && <Button variant="primary">Update</Button>}
+      {error && <FormError error={error} />}
+    </Box>
+  );
+};
+
 const UserTable = ({ data, resendInvite }) => {
   const columns = React.useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name",
+
+        accessor: (value) => {
+          return <UserNameInput userId={value.id} currentName={value.name} />;
+        },
       },
 
       {
@@ -535,7 +605,7 @@ const UserTable = ({ data, resendInvite }) => {
     []
   );
 
-  const tableData = React.useMemo(() => data, []);
+  const tableData = React.useMemo(() => data, [data]);
   return (
     <Styled>
       <Table columns={columns} data={tableData} />
