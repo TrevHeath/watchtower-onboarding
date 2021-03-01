@@ -20,6 +20,7 @@ import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { useToasts } from "../../components/Toasts";
 import { checkFieldIsDirty } from "../../utils";
 import uniqWith from "lodash/uniqWith";
+import { isEmpty } from "lodash";
 
 const GET_AGENCY_DETAILS = gql`
   query GetAgencyDetails($id: String!) {
@@ -100,11 +101,24 @@ export default function UserManagement() {
     GET_AGENCY_DETAILS
   );
 
-  const { register, handleSubmit, errors, formState, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    errors,
+    formState,
+    reset,
+    setError,
+  } = useForm({
     mode: "onChange",
   });
 
-  const { dirty, isSubmitting, touched, submitCount, dirtyFields } = formState;
+  const {
+    isDirty,
+    isSubmitting,
+    touched,
+    submitCount,
+    dirtyFields,
+  } = formState;
 
   const defaultFormValues = {
     ...(data && data.agencies[0]),
@@ -171,41 +185,39 @@ export default function UserManagement() {
       let updatedActivities = [];
       let newActivities = [];
 
-      dirtyFieldsArray.length > 0 &&
-        uniqWith(dirtyFieldsArray, (i, b) => {
-          console.log(
-            i.split(/\.(?=[^\.]+$)/)[0] === b.split(/\.(?=[^\.]+$)/)[0]
+      if (dirtyFieldsArray.includes("activities")) {
+        Object.entries(dirtyFields.activities).map(([key, value]) => {
+          // const split = d.split(".");
+          const currentLabel = values.activities[key];
+
+          const newLabel = createActivtyTypeLabel(
+            currentLabel.subLabelOne,
+            currentLabel.subLabelTwo,
+            currentLabel.subLabelThree
           );
-          return i.split(/\.(?=[^\.]+$)/)[0] === b.split(/\.(?=[^\.]+$)/)[0];
-        }).map((d) => {
-          if (d.includes("activities")) {
-            const split = d.split(".");
-            const currentLabel = values.activities[split[1]];
 
-            if (split[1].startsWith("newLabel")) {
-              newActivities.push({
-                label: createActivtyTypeLabel(
-                  currentLabel.subLabelOne,
-                  currentLabel.subLabelTwo,
-                  currentLabel.subLabelThree
-                ),
-              });
-              return;
-            }
-
-            updatedActivities.push({
-              where: { id: split[1] },
-              data: {
-                label: createActivtyTypeLabel(
-                  currentLabel.subLabelOne,
-                  currentLabel.subLabelTwo,
-                  currentLabel.subLabelThree
-                ),
-              },
-            });
+          if (!newLabel) {
+            console.log("new", newLabel);
+            error = `Invalid category missing base categories: ${currentLabel.subLabelOne}, ${currentLabel.subLabelTwo}, ${currentLabel.subLabelThree}`;
           }
+
+          if (key.startsWith("newLabel")) {
+            newActivities.push({
+              label: newLabel,
+            });
+            return;
+          }
+
+          updatedActivities.push({
+            where: { id: key },
+            data: {
+              label: newLabel,
+            },
+          });
+
           return;
         });
+      }
 
       if (updatedActivities.length > 0) {
         connections.activities = {
@@ -219,6 +231,10 @@ export default function UserManagement() {
         };
       }
 
+      if (error) {
+        add({ content: error, variant: "error" });
+        return;
+      }
       const res = await updateOneAgency({
         variables: {
           where: {
@@ -721,6 +737,9 @@ export const createActivtyTypeLabel = (labelOne, labelTwo, labelThree) => {
   }
   if (!labelThree) {
     return `${labelOne} / ${labelTwo}`;
+  }
+  if (!labelOne || !labelTwo) {
+    return false;
   }
   return `${labelOne} / ${labelTwo} / ${labelThree}`;
 };

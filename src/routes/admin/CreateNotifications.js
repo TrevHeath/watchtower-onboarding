@@ -38,15 +38,21 @@ export default function UserManagement() {
     mode: "onChange",
   });
 
-  const { dirty } = formState;
+  const {
+    isDirty,
+    isSubmitting,
+    touched,
+    submitCount,
+    dirtyFields,
+  } = formState;
 
   const { add } = useToasts();
 
   const onCreate = async (values) => {
     try {
       let connections = {};
-      console.log(dirty, values);
-      if (isEmpty(values)) {
+
+      if (!isDirty) {
         add({ content: "No updates made.", variant: "error" });
         return;
       }
@@ -58,7 +64,7 @@ export default function UserManagement() {
           },
         };
       }
-      console.log(values);
+
       const res = await createNotification({
         variables: {
           data: {
