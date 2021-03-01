@@ -140,6 +140,7 @@ export default function UserManagement() {
 
   const onUpdate = async (values) => {
     try {
+      let error = null;
       if (!dirtyFields || Object.keys(dirtyFields).length === 0) {
         add({ content: "No updates made.", variant: "error" });
         return;
