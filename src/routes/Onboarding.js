@@ -11,7 +11,7 @@ import {
   Select,
 } from "theme-ui";
 
-import { CustomCheckboxTree as CheckboxTree } from "../components/checkboxTree/CheckboxTree";
+import { CustomCheckboxTree as CheckboxTree } from "../components/checkboxTree/checkboxTree";
 import Layout from "../components/Layout";
 
 const mapToOptionTree = (options) => {
