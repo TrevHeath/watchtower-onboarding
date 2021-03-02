@@ -148,7 +148,7 @@ function Onboarding() {
   const onInputChange = (e) => {
     setInputValues({
       ...inputValues,
-      [e.target.name]: e.target.value && e.target.value.trim(),
+      [e.target.name]: e.target.value && e.target.value,
     });
   };
 
