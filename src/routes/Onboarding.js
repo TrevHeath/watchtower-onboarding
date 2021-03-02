@@ -212,7 +212,7 @@ function Onboarding() {
           p={3}
         >
           <Heading pb={1}>Select Your Stat Categories</Heading>
-          <Text sx={{ fontSize: 13 }} pb={3}>
+          <Text fontSize={13} pb={3}>
             Check the categories you would like to capture
           </Text>
           <CheckboxTree options={mappedOptions} handleClear={onClear} />
