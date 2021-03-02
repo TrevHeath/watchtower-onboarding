@@ -38,14 +38,13 @@ const mapToOptionTree = (options) => {
 };
 
 function normalizeString(str) {
-  return str
-    .toLowerCase()
-    .split(" ")
-    .map(function (word) {
-      return word[0].toUpperCase() + word.substr(1);
-    })
-    .join(" ")
-    .trim();
+  return str.trim();
+  // .toLowerCase()
+  // .split(" ")
+  // .map(function (word) {
+  //   return word[0].toUpperCase() + word.substr(1);
+  // })
+  // .join(" ")
 }
 
 const options = [
@@ -144,7 +143,7 @@ function Onboarding() {
 
   const onAdd = (value, name) => {
     try {
-      const normalizedValue = value;
+      const normalizedValue = normalizeString(value);
       setValues((prevVals) => {
         let newVals;
         if (name === "category") {
