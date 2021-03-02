@@ -144,7 +144,7 @@ function Onboarding() {
 
   const onAdd = (value, name) => {
     try {
-      const normalizedValue = normalizeString(value);
+      const normalizedValue = value;
       setValues((prevVals) => {
         let newVals;
         if (name === "category") {
