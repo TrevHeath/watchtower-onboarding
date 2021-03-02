@@ -18,6 +18,7 @@ function getNodeIds(nodes) {
 }
 
 export const CustomCheckboxTree = ({ options, handleClear }) => {
+  const [loading, setLoading] = useState();
   const [nodes, setNodes] = useState(options);
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState();
@@ -41,7 +42,7 @@ export const CustomCheckboxTree = ({ options, handleClear }) => {
       return setErrors({ agency: "Please input an agency name" });
     }
     setErrors({});
-
+    setLoading(true);
     const cleanChecked = checked.map((i) => i.split(" -")[0]);
 
     fetch(slackUrl, {
@@ -56,10 +57,12 @@ export const CustomCheckboxTree = ({ options, handleClear }) => {
       .then((r) => {
         if (r.ok === true) {
           alert("Stat categories sent successfully");
+          setLoading(false);
         }
       })
       .catch((e) => {
         setErrors({ form: `Error submitting: ${e}` });
+        setLoading(false);
       });
   };
 
@@ -102,7 +105,9 @@ export const CustomCheckboxTree = ({ options, handleClear }) => {
           }}
         />
       </Box>
-      <Button>Submit categories</Button>
+      <Button disabled={loading}>
+        {loading ? "Submitting..." : "Submit categories"}
+      </Button>
 
       <Button
         style={{ marginLeft: 10 }}
