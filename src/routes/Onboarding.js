@@ -51,26 +51,12 @@ function normalizeString(str) {
 const options = [
   {
     category: "Rescues",
-    subCategories: [
-      "Rip Current",
-      "Surf",
-      "Pier",
-      "Rocks & Jetty",
-      "Inshore Holes",
-      "Other",
-    ],
+    subCategories: ["Rip Current", "Surf"],
     subSubCategories: ["Swimmer", "Apparatus", "Other"],
   },
   {
     category: "Preventative Action",
-    subCategories: [
-      "Rip Current",
-      "Surf",
-      "Pier",
-      "Rocks & Jetty",
-      "Inshore Holes",
-      "Other",
-    ],
+    subCategories: ["Rip Current", "Surf"],
     subSubCategories: ["Swimmer", "Apparatus", "Other"],
   },
   {
