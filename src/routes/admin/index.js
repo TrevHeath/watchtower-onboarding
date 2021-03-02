@@ -179,14 +179,14 @@ const Admin = () => {
   function handleChange(e, field) {
     let cleanValue;
     if (e.target.name === "stats") {
-      cleanValue = e.target.value.split(",").map((i) => toTitleCase(i.trim()));
+      cleanValue = e.target.value.split(",").map((i) => i.trim());
     }
     if (e.target.name === "positions") {
       const removeFront = e.target.value.split(",");
 
       cleanValue = removeFront
         ? removeFront.map((i) => ({
-            name: i && toTitleCase(i.trim()),
+            name: i && i.trim(),
             dispatchable: false,
           }))
         : "";
@@ -201,14 +201,14 @@ const Admin = () => {
 
       cleanValue = removeFront
         ? removeFront.map((i) => ({
-            name: i && toTitleCase(i.trim()),
+            name: i && i.trim(),
           }))
         : "";
     }
 
     setValues({
       ...values,
-      [e.target.name]: cleanValue || toTitleCase(e.target.value),
+      [e.target.name]: cleanValue || e.target.value,
     });
   }
 
