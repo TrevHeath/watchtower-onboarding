@@ -168,9 +168,9 @@ export default function UserManagement() {
           ...(checkFieldIsDirty(dirtyFieldsArray, "noaaTidesStation") && {
             noaaTidesStation: values.noaaTidesStation,
           }),
-          ...(checkFieldIsDirty(dirtyFieldsArray, "nwsOfficegridXgridY") && {
-            nwsOfficegridXgridY: values.nwsOfficegridXgridY,
-          }),
+          // ...(checkFieldIsDirty(dirtyFieldsArray, "nwsOfficegridXgridY") && {
+          //   nwsOfficegridXgridY: values.nwsOfficegridXgridY,
+          // }),
           ...(checkFieldIsDirty(dirtyFieldsArray, "incidentReporting") && {
             incidentReporting: values.incidentReporting,
           }),
@@ -232,10 +232,15 @@ export default function UserManagement() {
         };
       }
 
+      if (dirtyFieldsArray.includes("name")) {
+        connections.name = values.name;
+      }
+
       if (error) {
         add({ content: error, variant: "error" });
         return;
       }
+      console.log(connections, selectedAgencyId);
       const res = await updateOneAgency({
         variables: {
           where: {
@@ -382,7 +387,7 @@ export default function UserManagement() {
                 />
                 <FormError error={errors.noaaTidesStation} />
               </Box>
-              <Box py={25}>
+              {/* <Box py={25}>
                 <Label>nwsOfficegridXgridY</Label>
                 <Input
                   type="select"
@@ -393,7 +398,7 @@ export default function UserManagement() {
                   })}
                 />
                 <FormError error={errors.nwsOfficegridXgridY} />
-              </Box>
+              </Box> */}
               <Box py={25}>
                 <Label>Lat</Label>
                 <Input

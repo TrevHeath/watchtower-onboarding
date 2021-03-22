@@ -69,12 +69,12 @@ const Admin = () => {
                   {values.surflineSpotId}
                 </div>
               )}
-              {values.nwsOfficegridXgridY && (
+              {/* {values.nwsOfficegridXgridY && (
                 <div>
                   <Heading as="h3">nwsOfficegridXgridY:</Heading>
                   {values.nwsOfficegridXgridY}
                 </div>
-              )}
+              )} */}
               {values.noaaTidesStation && (
                 <div>
                   <Heading as="h3">noaaTidesStation:</Heading>
@@ -131,6 +131,7 @@ const Admin = () => {
             <CardFooter>
               <Button
                 sx={{ marginRight: 5 }}
+                disabled={loading}
                 onClick={async () => {
                   try {
                     const res = await onboard({
@@ -253,7 +254,7 @@ const Admin = () => {
             onChange={handleChange}
           />
         </Box>
-        <Box py={25}>
+        {/* <Box py={25}>
           {" "}
           <Label>nws Office gridXgridY</Label>
           <Box bg="primary" m={3} p={3} sx={{ color: "white" }}>
@@ -267,7 +268,7 @@ const Admin = () => {
             name="nwsOfficegridXgridY"
             onChange={handleChange}
           />
-        </Box>
+        </Box> */}
         <Box py={25}>
           {" "}
           <Label>noaaTidesStation</Label>
@@ -416,6 +417,9 @@ const formatGqlArgs = (data) => {
     agencyName: data.agencyName,
     activities: data.stats,
     surflineSpotId: data.surflineSpotId,
+    latitude: data.latitude ? parseFloat(data.latitude) : null,
+    longitude: data.longitude ? parseFloat(data.longitude) : null,
+    noaaTidesStation: data.noaaTidesStation,
   };
   if (data.users) {
     args.users = {
