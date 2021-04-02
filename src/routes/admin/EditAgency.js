@@ -180,6 +180,9 @@ export default function UserManagement() {
           ...(checkFieldIsDirty(dirtyFieldsArray, "comms") && {
             comms: values.comms,
           }),
+          ...(checkFieldIsDirty(dirtyFieldsArray, "publicDashboard") && {
+            publicDashboard: values.publicDashboard,
+          }),
         },
       };
 
