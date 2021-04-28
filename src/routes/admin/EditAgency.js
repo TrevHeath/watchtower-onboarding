@@ -27,6 +27,7 @@ const GET_AGENCY_DETAILS = gql`
     agencies(where: { id: { equals: $id } }) {
       id
       name
+      adminTags
       users {
         id
         name
@@ -65,6 +66,7 @@ const GET_AGENCIES = gql`
     agencies(where: $where) {
       id
       name
+      adminTags
     }
   }
 `;
@@ -88,7 +90,57 @@ const RE_SEND_INVITE = gql`
   }
 `;
 
+const TagInput = ({ onNewItem, items, onRemoveItem, title, loading }) => {
+  return (
+    <Box py={25}>
+      <Label>
+        {title || "Admin Tags"}{" "}
+        {loading && <Spinner height="15px" width="15px" />}
+      </Label>
+      <Input
+        onKeyDown={(e) => {
+          if (
+            e.key === "Enter" &&
+            e.target.value &&
+            e.target.value.length > 1
+          ) {
+            onNewItem(e);
+          }
+        }}
+      />
+      {items && (
+        <Flex>
+          {items.map((t) => (
+            <Box
+              sx={{
+                m: "4px",
+                p: 10,
+                borderRadius: 4,
+                bg: "secondary",
+                color: "white",
+              }}
+            >
+              {t}{" "}
+              <Button
+                sx={{
+                  bg: "transparent",
+                  p: 0,
+                  cursor: "pointer",
+                }}
+                onClick={() => onRemoveItem(t)}
+              >
+                X
+              </Button>
+            </Box>
+          ))}
+        </Flex>
+      )}
+    </Box>
+  );
+};
+
 export default function UserManagement() {
+  const [tags, setTags] = useState([]);
   const [selectedAgencyId, selectAgency] = useState(null);
   const [updateOneAgency, { loading }] = useMutation(UPDATE_AGENCY, {
     refetchQueries: ["GetAgencyDetails"],
@@ -296,6 +348,18 @@ export default function UserManagement() {
         <Heading as="h1">Update Agency</Heading>
 
         <Box py={25}>
+          <TagInput
+            title={"Filter agency list"}
+            items={tags}
+            loading={loading}
+            onRemoveItem={async (item) => {
+              setTags(tags.filter((i) => item !== i));
+            }}
+            onNewItem={(e) => {
+              setTags([...tags, e.target.value]);
+            }}
+          />
+          <Label>Select an agency</Label>
           <Select
             onChange={(e) => selectAgency(e.target.value)}
             type="select"
@@ -308,11 +372,19 @@ export default function UserManagement() {
                 <option key={-1} value="">
                   Select an agency
                 </option>,
-                ...agencies.agencies.map((a, k) => (
-                  <option key={k} value={a.id}>
-                    {a.name}
-                  </option>
-                )),
+                ...agencies.agencies
+                  .filter((a) =>
+                    tags.length > 0
+                      ? a.adminTags.some((r) => tags.includes(r))
+                      : true
+                  )
+                  .map((a, k) => (
+                    <option key={k} value={a.id}>
+                      {a.name}
+                      {a.adminTags && a.adminTags.length > 0 && " | Tags:"}{" "}
+                      {a.adminTags.join(", ")}
+                    </option>
+                  )),
               ]
             ) : (
               <option>No agencies</option>
@@ -323,74 +395,118 @@ export default function UserManagement() {
         <Box>
           {loadingAgency ? (
             <Spinner />
+          ) : !selectedAgencyId ? (
+            <Box sx={{ minHeight: "70vh" }}>Select and agency to update</Box>
           ) : (
-            <Box as="form" onSubmit={handleSubmit(onUpdate)}>
-              <Flex>
-                {defaultFormValues &&
-                  defaultFormValues.modules &&
-                  defaultFormValues.modules.map((v, k) => {
-                    return (
-                      <Flex key={k} px={10}>
-                        <Label>{v.key}</Label>
-                        <input
-                          type="checkbox"
-                          name={v.key}
-                          ref={register({
-                            required: false,
-                          })}
-                          defaultChecked={v.value}
-                        />
-                        <FormError error={errors[v.key]} />
-                      </Flex>
-                    );
-                  })}
-              </Flex>
-              <Box py={25}>
-                <Label>Name</Label>
-                <Input
-                  type="select"
-                  name="name"
-                  defaultValue={defaultFormValues.name}
-                  ref={register({
-                    required: false,
-                    minLength: {
-                      value: 3,
-                      message: "Make sure the name is long enough.",
-                    },
-                  })}
+            <>
+              {selectedAgencyId && (
+                <TagInput
+                  items={defaultFormValues.adminTags}
+                  loading={loading}
+                  onRemoveItem={async (item) => {
+                    await updateOneAgency({
+                      variables: {
+                        where: {
+                          id: selectedAgencyId,
+                        },
+                        data: {
+                          adminTags: {
+                            set: [
+                              ...defaultFormValues.adminTags.filter(
+                                (tg) => tg !== item
+                              ),
+                            ],
+                          },
+                        },
+                      },
+                    });
+                  }}
+                  onNewItem={async (e) => {
+                    await updateOneAgency({
+                      variables: {
+                        where: {
+                          id: selectedAgencyId,
+                        },
+                        data: {
+                          adminTags: {
+                            set: [
+                              ...defaultFormValues.adminTags,
+                              e.target.value,
+                            ],
+                          },
+                        },
+                      },
+                    });
+                  }}
                 />
-                <FormError error={errors.name} />
-              </Box>
-              <Box py={25}>
-                <Label>Surfline Id</Label>
-                <Input
-                  type="select"
-                  name="surflineSpotId"
-                  defaultValue={defaultFormValues.surflineSpotId}
-                  ref={register({
-                    required: false,
-                    minLength: {
-                      value: 15,
-                      message:
-                        "Spot ids should looks something like this: 5842041f4e65fad6a77089fa",
-                    },
-                  })}
-                />
-                <FormError error={errors.surflineSpotId} />
-              </Box>
-              <Box py={25}>
-                <Label>noaaTidesStation</Label>
-                <Input
-                  type="select"
-                  name="noaaTidesStation"
-                  defaultValue={defaultFormValues.noaaTidesStation}
-                  ref={register({
-                    required: false,
-                  })}
-                />
-                <FormError error={errors.noaaTidesStation} />
-              </Box>
-              {/* <Box py={25}>
+              )}
+              <Box as="form" onSubmit={handleSubmit(onUpdate)}>
+                <Flex>
+                  {defaultFormValues &&
+                    defaultFormValues.modules &&
+                    defaultFormValues.modules.map((v, k) => {
+                      return (
+                        <Flex key={k} px={10}>
+                          <Label>{v.key}</Label>
+                          <input
+                            type="checkbox"
+                            name={v.key}
+                            ref={register({
+                              required: false,
+                            })}
+                            defaultChecked={v.value}
+                          />
+                          <FormError error={errors[v.key]} />
+                        </Flex>
+                      );
+                    })}
+                </Flex>
+                <Box py={25}>
+                  <Label>Name</Label>
+                  <Input
+                    type="select"
+                    name="name"
+                    defaultValue={defaultFormValues.name}
+                    ref={register({
+                      required: false,
+                      minLength: {
+                        value: 3,
+                        message: "Make sure the name is long enough.",
+                      },
+                    })}
+                  />
+                  <FormError error={errors.name} />
+                </Box>
+                <Box py={25}>
+                  <Label>Surfline Id</Label>
+                  <Input
+                    type="select"
+                    name="surflineSpotId"
+                    defaultValue={defaultFormValues.surflineSpotId}
+                    ref={register({
+                      required: false,
+                      minLength: {
+                        value: 15,
+                        message:
+                          "Spot ids should looks something like this: 5842041f4e65fad6a77089fa",
+                      },
+                    })}
+                  />
+                  <FormError error={errors.surflineSpotId} />
+                </Box>
+                <Box py={25}>
+                  <Label>noaaTidesStation</Label>
+                  <Input
+                    type="select"
+                    name="noaaTidesStation"
+                    defaultValue={defaultFormValues.noaaTidesStation}
+                    ref={register({
+                      required: false,
+                    })}
+                  />
+                  <FormError error={errors.noaaTidesStation} />
+                </Box>
+                {/* <Box py={25}>
                 <Label>nwsOfficegridXgridY</Label>
                 <Input
                   type="select"
@@ -402,51 +518,52 @@ export default function UserManagement() {
                 />
                 <FormError error={errors.nwsOfficegridXgridY} />
               </Box> */}
-              <Box py={25}>
-                <Label>Lat</Label>
-                <Input
-                  type="select"
-                  name="latitude"
-                  defaultValue={defaultFormValues.latitude}
-                  ref={register({
-                    required: false,
-                  })}
-                />
-                <FormError error={errors.latitude} />
+                <Box py={25}>
+                  <Label>Lat</Label>
+                  <Input
+                    type="select"
+                    name="latitude"
+                    defaultValue={defaultFormValues.latitude}
+                    ref={register({
+                      required: false,
+                    })}
+                  />
+                  <FormError error={errors.latitude} />
+                </Box>
+                <Box py={25}>
+                  <Label>Long</Label>
+                  <Input
+                    type="select"
+                    name="longitude"
+                    defaultValue={defaultFormValues.longitude}
+                    ref={register({
+                      required: false,
+                    })}
+                  />
+                  <FormError error={errors.longitude} />
+                </Box>
+                <Box>
+                  {data && data.agencies[0].activities ? (
+                    <Box py={25}>
+                      <h2>Categories </h2>
+                      <ActivitiesTable
+                        data={data.agencies[0].activities}
+                        registerForm={register}
+                        dirtyFields={dirtyFieldsArray}
+                      />
+                      <FormError error={errors.activities} />
+                    </Box>
+                  ) : (
+                    <Fragment />
+                  )}
+                </Box>
+                <Box py={25}>
+                  <Button block type="submit">
+                    {loading ? "Updating..." : "Update"}
+                  </Button>
+                </Box>
               </Box>
-              <Box py={25}>
-                <Label>Long</Label>
-                <Input
-                  type="select"
-                  name="longitude"
-                  defaultValue={defaultFormValues.longitude}
-                  ref={register({
-                    required: false,
-                  })}
-                />
-                <FormError error={errors.longitude} />
-              </Box>
-              <Box>
-                {data && data.agencies[0].activities ? (
-                  <Box py={25}>
-                    <h2>Categories </h2>
-                    <ActivitiesTable
-                      data={data.agencies[0].activities}
-                      registerForm={register}
-                      dirtyFields={dirtyFieldsArray}
-                    />
-                    <FormError error={errors.activities} />
-                  </Box>
-                ) : (
-                  <Fragment />
-                )}
-              </Box>
-              <Box py={25}>
-                <Button block type="submit">
-                  {loading ? "Updating..." : "Update"}
-                </Button>
-              </Box>
-            </Box>
+            </>
           )}
 
           {data && data.agencies[0].users ? (

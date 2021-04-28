@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /Users/trevor/.yarn/bin/yarn audit
+  /usr/local/bin/node /Users/trevor/.yarn/bin/yarn prisma migrate deploy --preview-feature
 
 PATH: 
   /Users/trevor/.yarn/bin:/Users/trevor/.npm-packages/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Postgres.app/Contents/Versions/latest/bin
@@ -9762,7 +9762,7 @@ Lockfile:
     resolved "https://registry.npmjs.org/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
 
 Trace: 
-  Error: Command "audit" not found.
+  Error: Command "prisma" not found.
       at new MessageError (/Users/trevor/.config/yarn/global/node_modules/yarn/lib/cli.js:186:110)
       at /Users/trevor/.config/yarn/global/node_modules/yarn/lib/cli.js:87307:17
       at Generator.next (<anonymous>)
