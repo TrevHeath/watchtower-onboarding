@@ -27,7 +27,7 @@ export const getUser = () => {
   return client
     ? client
         .query({ query: GET_CURRENT_USER })
-        .then(d => d.me)
+        .then((d) => d.me)
         .catch(() => {})
     : null;
 };
@@ -38,7 +38,7 @@ export const getUserRole = () => {
   return jwt.decode(token).role;
 };
 
-export const setToken = token => cookie.save("token", token, { path: "/" });
+export const setToken = (token) => cookie.save("token", token, { path: "/" });
 export const deleteToken = () => cookie.remove("token", { path: "/" });
 
 export const getToken = () => cookie.load("token");
@@ -62,6 +62,7 @@ export const isLoggedIn = () => {
   if (!isBrowser()) return false;
   // const user = getUser()
   const user = getToken();
+
   return !!user;
 };
 
@@ -73,7 +74,7 @@ export const isAdmin = () => {
   return role === "SUPER_ADMIN";
 };
 
-export const logout = callback => {
+export const logout = (callback) => {
   deleteToken();
   callback();
 };

@@ -19,8 +19,9 @@ import gql from "graphql-tag";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { useToasts } from "../../components/Toasts";
 import { checkFieldIsDirty } from "../../utils";
-import uniqWith from "lodash/uniqWith";
-import { isEmpty } from "lodash";
+import { INVITE_USER } from "./UserManagement";
+import ReactModal from "react-modal";
+import { useModal } from "react-modal-hook";
 
 const GET_AGENCY_DETAILS = gql`
   query GetAgencyDetails($id: String!) {
@@ -148,6 +149,7 @@ export default function UserManagement() {
   const [resendInvite, { loading: resendingInvite }] = useMutation(
     RE_SEND_INVITE
   );
+
   const { data: agencies, loading: loadingAgencies } = useQuery(GET_AGENCIES);
   const [loadAgency, { loading: loadingAgency, data }] = useLazyQuery(
     GET_AGENCY_DETAILS
@@ -572,6 +574,7 @@ export default function UserManagement() {
               <UserTable
                 data={data.agencies[0].users}
                 resendInvite={onResendInvite}
+                agencyId={data.agencies[0].id}
               />
               <FormError error={errors.users} />
             </Box>
@@ -645,7 +648,6 @@ export const UserNameInput = ({ userId, currentName = "" }) => {
   });
 
   const { isDirty } = formState;
-  console.log(formState);
 
   const [updateUserRole, { error }] = useMutation(UPDATE_USER);
   const { add } = useToasts();
@@ -695,7 +697,7 @@ export const UserNameInput = ({ userId, currentName = "" }) => {
   );
 };
 
-const UserTable = ({ data, resendInvite }) => {
+const UserTable = ({ data, resendInvite, agencyId }) => {
   const columns = React.useMemo(
     () => [
       {
@@ -721,7 +723,7 @@ const UserTable = ({ data, resendInvite }) => {
         },
       },
       {
-        Header: "Resend Invite ",
+        Header: "Invites ",
         accessor: (value) => {
           if (value.isSignedUp === false && value.email) {
             return (
@@ -740,12 +742,106 @@ const UserTable = ({ data, resendInvite }) => {
               </Button>
             );
           }
+          if (!value.email) {
+            return <InviteCurrentUserModal user={value} agencyId={agencyId} />;
+          }
+
           return <Fragment />;
         },
       },
     ],
     []
   );
+
+  const InviteCurrentUserModal = ({ user, agencyId }) => {
+    const { add } = useToasts();
+    const [invite, { loading: inviting }] = useMutation(INVITE_USER);
+    const {
+      register,
+      handleSubmit,
+      errors,
+      formState,
+      reset,
+      setError,
+    } = useForm({
+      mode: "onChange",
+    });
+
+    async function inviteCurrentUser(args) {
+      try {
+        const res = await invite({
+          ...args,
+        });
+
+        if (!res.errors) {
+          add({
+            content: "User invited",
+            color: "success",
+          });
+          hideModal();
+        }
+      } catch (e) {
+        console.log(e);
+        add({
+          content: "Error inviting user",
+          color: "danger",
+        });
+      }
+    }
+
+    const [showModal, hideModal] = useModal(
+      () => (
+        <ReactModal isOpen>
+          <Box
+            style={{ position: "absolute", top: 5, right: 5 }}
+            onClick={hideModal}
+          >
+            X
+          </Box>
+
+          <Box
+            as="form"
+            sx={{ maxWidth: "700px", margin: "auto" }}
+            onSubmit={handleSubmit(async (values) => {
+              await inviteCurrentUser({
+                variables: {
+                  userId: user.id,
+                  email: values.email.trim(),
+                  role: values.role || "USER",
+                  agencyId: agencyId,
+                },
+              });
+            })}
+          >
+            <h3>Invite a current user</h3>
+            <Box py={25}>
+              <Label>Role</Label>
+              <Input
+                name={"email"}
+                ref={register({
+                  required: true,
+                })}
+              />
+            </Box>
+            <Box py={25}>
+              <Label>Role</Label>
+
+              <Select type="select" name="role" ref={register}>
+                <option value={"USER"}>User</option>
+                <option value={"ADMIN"}>Admin</option>
+              </Select>
+            </Box>
+            <Button variant="primary" sx={{ variant: "link" }}>
+              {inviting ? "inviting..." : "Send Invite"}
+            </Button>
+          </Box>
+        </ReactModal>
+      ),
+      [inviting]
+    );
+
+    return <Button onClick={() => showModal()}>Invite this User</Button>;
+  };
 
   const tableData = React.useMemo(() => data, [data]);
   return (

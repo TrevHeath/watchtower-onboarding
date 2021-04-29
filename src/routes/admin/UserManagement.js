@@ -18,18 +18,20 @@ const GET_AGENCIES = gql`
   }
 `;
 
-const INVITE_USER = gql`
+export const INVITE_USER = gql`
   mutation InviteUser(
     $email: String!
-    $agencyId: ID!
+    $agencyId: ID
+    $name: String
     $role: Role!
-    $name: String!
+    $userId: ID
   ) {
     sendInviteEmail(
       email: $email
       agencyId: $agencyId
-      role: $role
       name: $name
+      role: $role
+      userId: $userId
     ) {
       success
     }
@@ -42,15 +44,15 @@ export default function UserManagement() {
   const { register, handleSubmit } = useForm();
   const { add } = useToasts();
 
-  const onInvite = async values => {
+  const onInvite = async (values) => {
     try {
       const res = await invite({
         variables: {
           email: values.email,
           role: values.role || "USER",
           name: values.name,
-          agencyId: values.agencyId
-        }
+          agencyId: values.agencyId,
+        },
       });
 
       if (
@@ -84,7 +86,7 @@ export default function UserManagement() {
               {loadingAgencies ? (
                 <option>loading...</option>
               ) : agencies ? (
-                agencies.agencies.map(a => (
+                agencies.agencies.map((a) => (
                   <option value={a.id}>{a.name}</option>
                 ))
               ) : (
