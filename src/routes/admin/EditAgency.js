@@ -29,6 +29,12 @@ const GET_AGENCY_DETAILS = gql`
       id
       name
       adminTags
+      positions {
+        id
+        name
+        dispatchable
+        positionStatus
+      }
       users {
         id
         name
@@ -581,6 +587,14 @@ export default function UserManagement() {
           ) : (
             <Fragment />
           )}
+          {data && data.agencies[0].users ? (
+            <Box py={25}>
+              <h2>Positions </h2>
+              <PositionTable data={data.agencies[0].positions} />
+            </Box>
+          ) : (
+            <Fragment />
+          )}
         </Box>
       </Box>
     </Layout>
@@ -835,6 +849,40 @@ const UserTable = ({ data, resendInvite, agencyId }) => {
 
     return <Button onClick={() => showModal()}>Invite this User</Button>;
   };
+
+  const tableData = React.useMemo(() => data, [data]);
+  return (
+    <Styled>
+      <Table columns={columns} data={tableData} />
+    </Styled>
+  );
+};
+
+const PositionTable = ({ data }) => {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
+      },
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+
+      {
+        Header: "Dispatchable",
+        accessor: (value) => {
+          return value.dispatchable ? "Dispatchable Unit" : "Not Dispatchable";
+        },
+      },
+      {
+        Header: "Status",
+        accessor: "positionStatus",
+      },
+    ],
+    []
+  );
 
   const tableData = React.useMemo(() => data, [data]);
   return (
