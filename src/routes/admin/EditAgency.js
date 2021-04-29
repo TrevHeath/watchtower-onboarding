@@ -756,14 +756,7 @@ const UserTable = ({ data, resendInvite, agencyId }) => {
   const InviteCurrentUserModal = ({ user, agencyId }) => {
     const { add } = useToasts();
     const [invite, { loading: inviting }] = useMutation(INVITE_USER);
-    const {
-      register,
-      handleSubmit,
-      errors,
-      formState,
-      reset,
-      setError,
-    } = useForm({
+    const { register, handleSubmit } = useForm({
       mode: "onChange",
     });
 
