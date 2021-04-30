@@ -22,6 +22,8 @@ import { checkFieldIsDirty } from "../../utils";
 import { INVITE_USER } from "./UserManagement";
 import ReactModal from "react-modal";
 import { useModal } from "react-modal-hook";
+import CopyToClipboard from "react-copy-to-clipboard";
+import CopyBox from "../../components/CopyBox";
 
 const GET_AGENCY_DETAILS = gql`
   query GetAgencyDetails($id: String!) {
@@ -407,6 +409,12 @@ export default function UserManagement() {
             <Box sx={{ minHeight: "70vh" }}>Select and agency to update</Box>
           ) : (
             <>
+              <Box py={25}>
+                <CopyBox
+                  style={{ cursor: "pointer" }}
+                  value={defaultFormValues.id}
+                />
+              </Box>
               {selectedAgencyId && (
                 <TagInput
                   items={defaultFormValues.adminTags}
@@ -863,7 +871,7 @@ const PositionTable = ({ data }) => {
     () => [
       {
         Header: "ID",
-        accessor: "id",
+        accessor: (value) => <CopyBox value={value.id} />,
       },
       {
         Header: "Name",
