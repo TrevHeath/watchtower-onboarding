@@ -18,6 +18,7 @@ export default {
     blue: "#007bff",
     indigo: "#6610f2",
     purple: "#6f42c1",
+    purpleLight: "#5159d2",
     pink: "#e83e8c",
     red: "#dc3545",
     orange: "#fd7e14",
