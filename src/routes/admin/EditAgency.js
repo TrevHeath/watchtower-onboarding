@@ -183,6 +183,7 @@ export default function UserManagement() {
   } = formState;
 
   const defaultFormValues = {
+    agencyId: data && data.agencies[0],
     ...(data && data.agencies[0]),
     ...(data && data.agencies[0].settings),
   };
@@ -412,7 +413,7 @@ export default function UserManagement() {
               <Box py={25}>
                 <CopyBox
                   style={{ cursor: "pointer" }}
-                  value={defaultFormValues.id}
+                  value={selectedAgencyId}
                 />
               </Box>
               {selectedAgencyId && (
