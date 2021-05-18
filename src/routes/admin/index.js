@@ -432,6 +432,7 @@ const formatGqlArgs = (data) => {
   if (data.positions) {
     args.positions = {
       create: data.positions.map((u) => ({
+        positionStatus: "ONTHEJOB",
         name: u.name,
         dispatchable: data[u.name] ? true : false,
       })),
