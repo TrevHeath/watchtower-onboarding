@@ -38,7 +38,8 @@ export const getUserRole = () => {
   return jwt.decode(token).role;
 };
 
-export const setToken = (token) => cookie.save("token", token, { path: "/" });
+export const setToken = (token) =>
+  cookie.save("token", token, { path: "/", secure: true });
 export const deleteToken = () => cookie.remove("token", { path: "/" });
 
 export const getToken = () => cookie.load("token");
